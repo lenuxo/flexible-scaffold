@@ -1,0 +1,40 @@
+# Source files
+src/
+tsconfig.json
+.eslintrc.js
+.vscode/
+
+# Development dependencies
+node_modules/
+*.log
+*.tgz
+
+# Test files
+test/
+*.test.js
+*.test.ts
+coverage/
+.nyc_output/
+
+# Development scripts
+test-setup.ts
+vitest.config.ts
+
+# Temporary files
+.tmp/
+temp/
+*.tmp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
