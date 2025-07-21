@@ -1,6 +1,6 @@
 {
-  "name": "@duan0123/flexible-scaffold",
-  "version": "1.0.0",
+  "name": "flexible-scaffold-cli",
+  "version": "1.0.1",
   "description": "灵活的项目脚手架工具，支持Git管理的模板和AI助手调用",
   "main": "dist/index.js",
   "bin": {
@@ -34,8 +34,14 @@
     "boilerplate",
     "typescript"
   ],
-  "author": "reg_duan@163.com",
-  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lenuxo/flexible-scaffold.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lenuxo/flexible-scaffold/issues"
+  },
+  "homepage": "https://github.com/lenuxo/flexible-scaffold#readme",
   "dependencies": {
     "chalk": "^4.1.2",
     "commander": "^11.1.0",
