@@ -1,10 +1,10 @@
 {
-  "name": "flexible-scaffold-cli",
-  "version": "1.0.1",
+  "name": "flexible-scaffold",
+  "version": "1.0.0",
   "description": "灵活的项目脚手架工具，支持Git管理的模板和AI助手调用",
   "main": "dist/index.js",
   "bin": {
-    "scaffold": "./dist/index.js",
+    "flexible-scaffold": "./dist/index.js",
     "scaffold-ai": "./scripts/scaffold-ai.sh"
   },
   "scripts": {

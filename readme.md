@@ -3,12 +3,35 @@
 <div align="center">
   <h3>🚀 灵活的项目脚手架工具</h3>
   <p>支持Git管理的模板和AI助手调用的TypeScript项目</p>
+  
   <p>
+    <a href="https://www.npmjs.com/package/flexible-scaffold">
+      <img alt="npm version" src="https://img.shields.io/npm/v/flexible-scaffold.svg?style=flat-square">
+    </a>
+    <a href="https://www.npmjs.com/package/flexible-scaffold">
+      <img alt="npm downloads" src="https://img.shields.io/npm/dm/flexible-scaffold.svg?style=flat-square">
+    </a>
     <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" />
     <img alt="Node.js" src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white" />
     <img alt="Git" src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white" />
   </p>
+  
+  <p>
+    <a href="https://www.npmjs.com/package/flexible-scaffold">
+      <strong>📦 NPM包: flexible-scaffold</strong>
+    </a>
+  </p>
 </div>
+
+## 📦 NPM包信息
+
+| 信息 | 详情 |
+|---|---|
+| **包名** | `flexible-scaffold` |
+| **版本** | 1.0.0 |
+| **NPM地址** | [https://www.npmjs.com/package/flexible-scaffold](https://www.npmjs.com/package/flexible-scaffold) |
+| **安装命令** | `npm install -g flexible-scaffold` |
+| **Npx使用** | `npx flexible-scaffold [command]` |
 
 ## ✨ 核心特性
 
@@ -21,17 +44,39 @@
 - 📱 **交互式界面**: 提供友好的交互式命令界面
 - 🧪 **完整测试**: 包含MCP服务器功能测试
 
-## 📦 快速开始
+## 🚀 快速开始
 
-### 安装依赖
+### 通过NPM安装（推荐）
+
+```bash
+# 全局安装
+npm install -g flexible-scaffold
+
+# 作为项目依赖安装
+npm install flexible-scaffold
+
+# 使用npx直接运行（无需安装）
+npx flexible-scaffold --help
+```
+
+**📋 NPM包详情**:
+- 📦 **包名**: `flexible-scaffold`
+- 🏷️ **版本**: 最新稳定版
+- 🔗 **仓库**: [GitHub](https://github.com/lenuxo/flexible-scaffold)
+- 📖 **文档**: 本README文件
+- 🐛 **问题反馈**: [GitHub Issues](https://github.com/lenuxo/flexible-scaffold/issues)
+
+### 从源码安装
 
 ```bash
 git clone <repository-url>
 cd flexible-scaffold
 npm install
+npm run build
+npm install -g .
 ```
 
-### 构建项目
+### 构建项目（开发者）
 
 ```bash
 # 开发模式
@@ -44,7 +89,7 @@ npm run build
 npm start
 ```
 
-### 全局安装
+### 全局安装（开发者）
 
 ```bash
 # 方法1: 使用npm link
@@ -62,67 +107,69 @@ npm install -g .
 
 ```bash
 # 查看帮助
-scaffold --help
+flexible-scaffold --help
 
 # 添加脚手架模板
-scaffold add react-antd https://github.com/username/react-antd-template.git "React + Ant Design模板"
+flexible-scaffold add react-antd https://github.com/username/react-antd-template.git "React + Ant Design模板"
 
 # 列出所有模板
-scaffold list
+flexible-scaffold list
 
 # 创建项目
-scaffold create react-antd my-new-project
+flexible-scaffold create react-antd my-new-project
 
 # 交互式创建
-scaffold create react-antd my-project --interactive
+flexible-scaffold create react-antd my-project --interactive
 
 # 更新特定模板
-scaffold update react-antd
+flexible-scaffold update react-antd
 
 # 批量更新所有模板
-scaffold update
+flexible-scaffold update
 
 # 删除模板
-scaffold remove react-antd
+flexible-scaffold remove react-antd
 
 # 查看模板信息
-scaffold info react-antd
+flexible-scaffold info react-antd
 
 # 验证模板
-scaffold validate react-antd
+flexible-scaffold validate react-antd
 
 # 清理无效模板
-scaffold cleanup
+flexible-scaffold cleanup
 
 # 启动交互式界面
-scaffold interactive
+flexible-scaffold interactive
 ```
 
 ### 配置管理
 
 ```bash
 # 显示配置
-scaffold config --show
+flexible-scaffold config --show
 
 # 显示配置路径
-scaffold config --path
+flexible-scaffold config --path
 
 # 导出配置
-scaffold config --export config-backup.json
+flexible-scaffold config --export config-backup.json
 
 # 导入配置
-scaffold config --import config-backup.json
+flexible-scaffold config --import config-backup.json
 ```
 
 ### AI助手调用
 
 ```bash
 # 使用JSON输出模式（适合AI调用）
-SCAFFOLD_JSON_OUTPUT=true scaffold list
+SCAFFOLD_JSON_OUTPUT=true flexible-scaffold list
 
-# 或使用专用包装脚本
-./scripts/scaffold-ai.sh list
-./scripts/scaffold-ai.sh create react-antd my-project
+# 使用已安装的包
+npx flexible-scaffold --json list
+
+# 或使用全局安装的版本
+flexible-scaffold --json create react-antd my-project
 ```
 
 ## 🏗️ 项目结构
@@ -234,23 +281,52 @@ export default App;
 ### 启动MCP服务器
 
 ```bash
-# 开发模式
-npm run mcp
+# 使用已安装的包
+npx flexible-scaffold mcp
 
-# 或直接运行
-npx tsx src/mcp-scaffold-server.ts
+# 或使用全局安装的版本
+flexible-scaffold mcp
+
+# 开发模式（从源码）
+npm run mcp
 ```
 
-### Claude Desktop配置
+### NPM包MCP配置
 
-在 `~/.config/claude-desktop/claude_desktop_config.json` 中添加：
+在配置文件（如Claude Desktop的`~/.config/claude-desktop/claude_desktop_config.json`）中添加：
 
 ```json
 {
   "mcpServers": {
     "flexible-scaffold": {
-      "command": "node",
-      "args": ["path/to/flexible-scaffold/dist/mcp-scaffold-server.js"]
+      "command": "npx",
+      "args": ["flexible-scaffold", "mcp"]
+    }
+  }
+}
+```
+
+### 全局安装MCP配置
+
+```json
+{
+  "mcpServers": {
+    "flexible-scaffold": {
+      "command": "flexible-scaffold",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+### 配置示例（使用全局安装）
+
+```json
+{
+  "mcpServers": {
+    "flexible-scaffold": {
+      "command": "flexible-scaffold-cli",
+      "args": ["mcp"]
     }
   }
 }
@@ -340,9 +416,40 @@ npm run build
 
 # 准备发布
 npm run prepare
+```
 
-# 发布到npm
-npm publish
+### 从NPM安装使用
+
+```bash
+# 检查包信息
+npm view flexible-scaffold
+
+# 安装最新版本
+npm install -g flexible-scaffold
+
+# 安装特定版本
+npm install -g flexible-scaffold@latest
+
+# 查看已安装的版本
+flexible-scaffold --version
+```
+
+### 常见问题
+
+**Q: 如何确认安装成功？**
+```bash
+flexible-scaffold --version
+# 应该显示版本号
+```
+
+**Q: 如何更新到最新版本？**
+```bash
+npm update -g flexible-scaffold
+```
+
+**Q: 如何卸载？**
+```bash
+npm uninstall -g flexible-scaffold
 ```
 
 ## 🔧 配置项

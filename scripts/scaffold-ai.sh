@@ -6,7 +6,7 @@
 export SCAFFOLD_JSON_OUTPUT=true
 
 # 脚手架工具的路径
-SCAFFOLD_BIN="scaffold"
+SCAFFOLD_BIN="flexible-scaffold"
 
 # 检查是否在开发模式
 if [ -f "dist/index.js" ]; then

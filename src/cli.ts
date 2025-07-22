@@ -19,7 +19,7 @@ export class CLI {
 
   private setupCommands(): void {
     this.program
-      .name('scaffold')
+      .name('flexible-scaffold')
       .description('灵活的项目脚手架工具，支持Git管理的模板')
       .version('1.0.0');
 
