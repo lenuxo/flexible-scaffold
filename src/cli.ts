@@ -30,10 +30,10 @@ export class CLI {
       .command('add')
       .description('添加新的脚手架模板')
       .argument('<name>', '模板名称')
-      .argument('<git-url>', 'Git仓库URL')
+      .argument('<source>', 'Git仓库URL或本地目录路径')
       .option('-d, --description <desc>', '模板描述')
-      .action(async (name: string, gitUrl: string, options: { description?: string }) => {
-        const result = await this.scaffold.addTemplate(name, gitUrl, options.description);
+      .action(async (name: string, source: string, options: { description?: string }) => {
+        const result = await this.scaffold.addTemplate(name, source, options.description);
         this.handleResult(result);
       });
 
@@ -356,7 +356,19 @@ export class CLI {
    * 交互式添加模板
    */
   private async interactiveAddTemplate(): Promise<void> {
-    const answers = await inquirer.prompt([
+    const { templateType } = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'templateType',
+        message: '选择模板类型:',
+        choices: [
+          { name: '🌐 Git仓库模板', value: 'git' },
+          { name: '📁 本地目录模板', value: 'local' },
+        ],
+      },
+    ]);
+
+    const commonQuestions = [
       {
         type: 'input',
         name: 'name',
@@ -365,7 +377,16 @@ export class CLI {
       },
       {
         type: 'input',
-        name: 'gitUrl',
+        name: 'description',
+        message: '模板描述 (可选):',
+      },
+    ];
+
+    let sourceQuestion;
+    if (templateType === 'git') {
+      sourceQuestion = {
+        type: 'input',
+        name: 'source',
         message: 'Git仓库URL:',
         validate: (input: string) => {
           if (!input.trim()) return 'Git URL不能为空';
@@ -374,17 +395,30 @@ export class CLI {
           }
           return true;
         },
-      },
-      {
+      };
+    } else {
+      sourceQuestion = {
         type: 'input',
-        name: 'description',
-        message: '模板描述 (可选):',
-      },
-    ]);
+        name: 'source',
+        message: '本地目录路径:',
+        validate: (input: string) => {
+          if (!input.trim()) return '本地路径不能为空';
+          const fs = require('fs');
+          const path = require('path');
+          const fullPath = path.resolve(input.trim());
+          if (!fs.existsSync(fullPath)) return '指定的目录不存在';
+          if (!fs.statSync(fullPath).isDirectory()) return '指定的路径不是目录';
+          return true;
+        },
+      };
+    }
+
+    const questions = [...commonQuestions, sourceQuestion];
+    const answers = await inquirer.prompt(questions);
 
     const result = await this.scaffold.addTemplate(
       answers.name,
-      answers.gitUrl,
+      answers.source,
       answers.description
     );
     this.handleResult(result);
@@ -504,8 +538,14 @@ export class CLI {
   private displayTemplateInfo(name: string, template: any): void {
     console.log(chalk.blue.bold(`\n📋 模板详情: ${name}\n`));
     console.log(`📝 描述: ${template.description || '无描述'}`);
-    console.log(`🔗 Git URL: ${template.gitUrl}`);
     console.log(`📅 添加时间: ${new Date(template.addedAt).toLocaleString()}`);
+    
+    if (template.type === 'git') {
+      console.log(`🔗 Git URL: ${template.gitUrl}`);
+    } else {
+      console.log(`📁 源路径: ${template.sourcePath}`);
+      console.log(`🏷️  类型: 本地模板`);
+    }
     
     if (template.updatedAt) {
       console.log(`🔄 最后更新: ${new Date(template.updatedAt).toLocaleString()}`);

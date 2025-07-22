@@ -40,20 +40,32 @@ export class ScaffoldMCPServer {
       "add_scaffold_template",
       {
         name: z.string().describe("模板名称（唯一标识符）"),
-        gitUrl: z.string().describe("Git仓库URL"), 
+        source: z.string().describe("Git仓库URL或本地目录路径"), 
         description: z.string().optional().describe("模板描述（可选）")
       },
-      async ({ name, gitUrl, description }) => {
+      async ({ name, source, description }) => {
         try {
-          const result = await this.scaffold.addTemplate(name, gitUrl, description || '');
-          return {
-            content: [{
-              type: "text",
-              text: result.success 
-                ? `✅ 成功添加模板 "${name}"\n📍 Git URL: ${gitUrl}\n📝 描述: ${description || '无描述'}`
-                : `❌ 添加模板失败: ${result.error}`
-            }]
-          };
+          const result = await this.scaffold.addTemplate(name, source, description || '');
+          
+          if (result.success) {
+            const isGitUrl = source.startsWith('http') || source.startsWith('git@') || source.startsWith('ssh://');
+            const typeText = isGitUrl ? 'Git' : '本地';
+            const sourceText = isGitUrl ? `Git URL: ${source}` : `源路径: ${source}`;
+            
+            return {
+              content: [{
+                type: "text",
+                text: `✅ 成功添加${typeText}模板 "${name}"\n📍 ${sourceText}\n📝 描述: ${description || '无描述'}`
+              }]
+            };
+          } else {
+            return {
+              content: [{
+                type: "text",
+                text: `❌ 添加模板失败: ${result.error}`
+              }]
+            };
+          }
         } catch (error) {
           return {
             content: [{
@@ -166,9 +178,18 @@ export class ScaffoldMCPServer {
 
           let output = "📋 可用模板列表:\n\n";
           result.templates.forEach((template, index) => {
-            output += `${index + 1}. **${template.name}**\n`;
+            const typeIcon = template.type === 'local' ? '📁' : '🌐';
+            const typeText = template.type === 'local' ? '本地' : 'Git';
+            
+            output += `${index + 1}. **${template.name}** ${typeIcon}[${typeText}]\n`;
             output += `   📝 描述: ${template.description}\n`;
-            output += `   🔗 Git URL: ${template.gitUrl}\n`;
+            
+            if (template.type === 'git') {
+              output += `   🔗 Git URL: ${template.gitUrl}\n`;
+            } else {
+              output += `   📁 源路径: ${template.sourcePath}\n`;
+            }
+            
             output += `   📅 添加时间: ${new Date(template.addedAt).toLocaleString()}\n`;
             if (template.tags) {
               output += `   🏷️ 标签: ${template.tags.join(', ')}\n`;
@@ -267,8 +288,14 @@ export class ScaffoldMCPServer {
           const template = result.data as TemplateInfo;
           let output = `📋 模板详情: **${name}**\n\n`;
           output += `📝 描述: ${template.description || '无描述'}\n`;
-          output += `🔗 Git URL: ${template.gitUrl}\n`;
           output += `📅 添加时间: ${new Date(template.addedAt).toLocaleString()}\n`;
+          
+          if (template.type === 'git') {
+            output += `🔗 Git URL: ${template.gitUrl}\n`;
+          } else {
+            output += `📁 源路径: ${template.sourcePath}\n`;
+            output += `🏷️  类型: 本地模板\n`;
+          }
           
           if (template.updatedAt) {
             output += `🔄 最后更新: ${new Date(template.updatedAt).toLocaleString()}\n`;

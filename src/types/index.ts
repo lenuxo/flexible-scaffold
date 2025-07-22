@@ -42,12 +42,14 @@ export interface TemplatePrompt {
 }
 
 export interface TemplateInfo {
-  gitUrl: string;
-  description: string;
+  gitUrl?: string;
   localPath: string;
+  description: string;
   addedAt: string;
   updatedAt?: string;
   config?: TemplateConfig;
+  type: 'git' | 'local';
+  sourcePath?: string;
 }
 
 export interface ScaffoldConfig {
@@ -77,9 +79,11 @@ export interface ListTemplatesResult extends OperationResult {
   templates?: Array<{
     name: string;
     description: string;
-    gitUrl: string;
+    gitUrl?: string;
     addedAt: string;
     tags?: string[];
+    type: 'git' | 'local';
+    sourcePath?: string;
   }>;
 }
 

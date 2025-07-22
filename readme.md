@@ -32,7 +32,7 @@
 | Information | Details |
 |---|---|
 | **Package Name** | `flexible-scaffold` |
-| **Version** | 1.0.1 |
+| **Version** | 1.0.2 |
 | **NPM Registry** | [https://www.npmjs.com/package/flexible-scaffold](https://www.npmjs.com/package/flexible-scaffold) |
 | **Install Command** | `npm install -g flexible-scaffold` |
 | **Npx Usage** | `npx flexible-scaffold [command]` |
@@ -40,8 +40,8 @@
 ## ✨ Core Features
 
 - 🎯 **TypeScript Support**: Complete type definitions and type safety
-- 🔄 **Git Decoupled Management**: Scaffold templates managed independently via Git repositories
-- 🛠️ **Flexible Add/Delete**: Dynamic addition, deletion, and updating of scaffold templates
+- 🔄 **Dual Template Support**: Support both Git repositories and local directories as templates
+- 🛠️ **Flexible Add/Delete**: Dynamic addition, deletion, and updating of scaffold templates from Git or local sources
 - 🤖 **AI-Friendly**: Supports MCP protocol and JSON output for AI assistant integration
 - ⚡ **Single Command Operations**: All operations can be completed with a single command
 - 🎨 **Template Variables**: Support for template variable substitution and post-processing scripts
@@ -113,8 +113,11 @@ npm install -g .
 # View help
 flexible-scaffold --help
 
-# Add scaffold template
+# Add Git template
 flexible-scaffold add react-antd https://github.com/username/react-antd-template.git "React + Ant Design template"
+
+# Add local directory template
+flexible-scaffold add my-template /path/to/local/template -d "My local template"
 
 # List all templates
 flexible-scaffold list
@@ -127,10 +130,10 @@ flexible-scaffold create react-antd my-new-project
 # Interactive creation
 flexible-scaffold create react-antd my-project --interactive
 
-# Update specific template
+# Update specific template (Git only)
 flexible-scaffold update react-antd
 
-# Update all templates
+# Update all templates (Git only)
 flexible-scaffold update
 
 # Remove template
@@ -253,11 +256,11 @@ Add to configuration file (like Claude Desktop's `~/.config/claude-desktop/claud
 ### Available MCP Features
 
 **🔧 MCP Tools**:
-- `add_scaffold_template`: Add new template
+- `add_scaffold_template`: Add new template (Git or local)
 - `remove_scaffold_template`: Remove template
-- `update_scaffold_template`: Update specific template
-- `update_all_scaffold_templates`: Update all templates
-- `list_scaffold_templates`: List all templates
+- `update_scaffold_template`: Update specific template (Git only)
+- `update_all_scaffold_templates`: Update all templates (Git only)
+- `list_scaffold_templates`: List all templates (Git and local)
 - `create_project_from_scaffold`: Create project from template
 - `get_scaffold_template_info`: Get template details
 - `validate_scaffold_template`: Validate template
@@ -479,6 +482,16 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Vitest](https://vitest.dev/) for testing framework
 
 ## 🏷️ Version History
+
+- **v1.0.2** - Local template support
+  - Support for local directory templates 📁
+  - Dual template type identification (Git 🌐 vs Local 📁)
+  - Updated CLI and MCP tools for local templates
+  - Enhanced interactive interface with template type selection
+
+- **v1.0.1** - Bug fixes and improvements
+  - Fixed MCP command issues
+  - Updated documentation
 
 - **v1.0.0** - Initial release with core functionality
   - Basic scaffold operations

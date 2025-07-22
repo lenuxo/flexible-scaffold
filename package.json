@@ -1,7 +1,7 @@
 {
   "name": "flexible-scaffold",
-  "version": "1.0.1",
-  "description": "灵活的项目脚手架工具，支持Git管理的模板和AI助手调用",
+  "version": "1.0.2",
+  "description": "灵活的项目脚手架工具，支持Git仓库和本地目录模板，以及AI助手调用",
   "main": "dist/index.js",
   "bin": {
     "flexible-scaffold": "./dist/index.js",

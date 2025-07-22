@@ -106,9 +106,27 @@ export class FlexibleScaffold {
   }
 
   /**
-   * 添加模板
+   * 添加Git模板
    */
   public async addTemplate(
+    name: string,
+    source: string,
+    description = ''
+  ): Promise<OperationResult> {
+    // 检查是否为本地目录路径
+    const isLocalPath = !isValidGitUrl(source) && pathExists(source) && fs.statSync(source).isDirectory();
+    
+    if (isLocalPath) {
+      return this.addLocalTemplate(name, source, description);
+    } else {
+      return this.addGitTemplate(name, source, description);
+    }
+  }
+
+  /**
+   * 添加Git模板
+   */
+  public async addGitTemplate(
     name: string,
     gitUrl: string,
     description = ''
@@ -125,7 +143,7 @@ export class FlexibleScaffold {
       const config = this.loadConfig();
       const templatePath = path.join(this.templatesDir, name);
 
-      logger.info(`添加模板: ${name}`);
+      logger.info(`添加Git模板: ${name}`);
       logger.info(`Git URL: ${gitUrl}`);
 
       // 如果本地已存在，先删除
@@ -151,19 +169,88 @@ export class FlexibleScaffold {
         localPath: templatePath,
         addedAt: getCurrentTimestamp(),
         config: templateConfig,
+        type: 'git',
       };
 
       this.saveConfig(config);
-      logger.success(`模板 "${name}" 添加成功`);
+      logger.success(`Git模板 "${name}" 添加成功`);
 
       return {
         success: true,
-        message: `模板 ${name} 添加成功`,
-        data: { name, gitUrl, description },
+        message: `Git模板 ${name} 添加成功`,
+        data: { name, gitUrl, description, type: 'git' },
       };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      logger.error(`添加模板失败: ${errorMessage}`);
+      logger.error(`添加Git模板失败: ${errorMessage}`);
+      return { success: false, error: errorMessage };
+    }
+  }
+
+  /**
+   * 添加本地模板
+   */
+  public async addLocalTemplate(
+    name: string,
+    sourcePath: string,
+    description = ''
+  ): Promise<OperationResult> {
+    if (!name.trim()) {
+      return { success: false, error: '模板名称不能为空' };
+    }
+
+    if (!pathExists(sourcePath)) {
+      return { success: false, error: '本地模板目录不存在' };
+    }
+
+    if (!fs.statSync(sourcePath).isDirectory()) {
+      return { success: false, error: '指定路径不是有效的目录' };
+    }
+
+    try {
+      const config = this.loadConfig();
+      const templatePath = path.join(this.templatesDir, name);
+
+      logger.info(`添加本地模板: ${name}`);
+      logger.info(`源路径: ${sourcePath}`);
+
+      // 如果本地已存在，先删除
+      if (pathExists(templatePath)) {
+        removeDir(templatePath);
+      }
+
+      // 复制本地模板到模板目录
+      await withSpinner(
+        '复制本地模板...',
+        async () => {
+          copyDir(sourcePath, templatePath);
+        }
+      );
+
+      // 读取模板配置
+      const templateConfig = this.loadTemplateConfig(templatePath);
+
+      // 更新配置
+      config.templates[name] = {
+        localPath: templatePath,
+        description: description || templateConfig?.description || '',
+        addedAt: getCurrentTimestamp(),
+        config: templateConfig,
+        type: 'local',
+        sourcePath: path.resolve(sourcePath),
+      };
+
+      this.saveConfig(config);
+      logger.success(`本地模板 "${name}" 添加成功`);
+
+      return {
+        success: true,
+        message: `本地模板 ${name} 添加成功`,
+        data: { name, sourcePath, description, type: 'local' },
+      };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error(`添加本地模板失败: ${errorMessage}`);
       return { success: false, error: errorMessage };
     }
   }
@@ -219,6 +306,15 @@ export class FlexibleScaffold {
       }
 
       const template = config.templates[name];
+      
+      // 本地模板不支持更新
+      if (template.type === 'local') {
+        return { 
+          success: false, 
+          error: `本地模板 "${name}" 不支持更新操作，请手动更新源目录后重新添加` 
+        };
+      }
+
       const templatePath = template.localPath;
 
       logger.info(`更新模板: ${name}`);
@@ -270,10 +366,18 @@ export class FlexibleScaffold {
 
       const templates = templateNames.map(name => {
         const template = config.templates[name];
+        const typeIcon = template.type === 'local' ? '📁' : '🌐';
+        const typeText = template.type === 'local' ? '本地' : 'Git';
         
-        console.log(`🔹 ${name}`);
+        console.log(`${typeIcon} ${name} [${typeText}]`);
         console.log(`   描述: ${template.description || '无描述'}`);
-        console.log(`   Git: ${template.gitUrl}`);
+        
+        if (template.type === 'git') {
+          console.log(`   Git: ${template.gitUrl}`);
+        } else {
+          console.log(`   源路径: ${template.sourcePath}`);
+        }
+        
         console.log(`   添加时间: ${new Date(template.addedAt).toLocaleString()}`);
         
         if (template.config?.tags) {
@@ -288,6 +392,8 @@ export class FlexibleScaffold {
           gitUrl: template.gitUrl,
           addedAt: template.addedAt,
           tags: template.config?.tags,
+          type: template.type,
+          sourcePath: template.sourcePath,
         };
       });
 

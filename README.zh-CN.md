@@ -28,7 +28,7 @@
 | 信息 | 详情 |
 |---|---|
 | **包名** | `flexible-scaffold` |
-| **版本** | 1.0.1 |
+| **版本** | 1.0.2 |
 | **NPM地址** | [https://www.npmjs.com/package/flexible-scaffold](https://www.npmjs.com/package/flexible-scaffold) |
 | **安装命令** | `npm install -g flexible-scaffold` |
 | **Npx使用** | `npx flexible-scaffold [command]` |
@@ -36,8 +36,8 @@
 ## ✨ 核心特性
 
 - 🎯 **TypeScript 支持**: 完整的类型定义和类型安全
-- 🔄 **Git解耦管理**: 脚手架模板通过Git仓库独立管理
-- 🛠️ **灵活添加删除**: 支持动态添加、删除、更新脚手架模板
+- 🔄 **双重模板支持**: 支持Git仓库和本地目录作为模板
+- 🛠️ **灵活添加删除**: 支持动态添加、删除、更新Git仓库或本地目录的脚手架模板
 - 🤖 **AI友好**: 支持MCP协议和JSON输出，便于AI助手调用
 - ⚡ **单命令操作**: 所有操作都支持单条命令完成
 - 🎨 **模板变量**: 支持模板变量替换和后处理脚本
@@ -109,8 +109,11 @@ npm install -g .
 # 查看帮助
 flexible-scaffold --help
 
-# 添加脚手架模板
+# 添加Git模板
 flexible-scaffold add react-antd https://github.com/username/react-antd-template.git "React + Ant Design模板"
+
+# 添加本地目录模板
+flexible-scaffold add my-template /path/to/local/template -d "我的本地模板"
 
 # 列出所有模板
 flexible-scaffold list
@@ -123,10 +126,10 @@ flexible-scaffold create react-antd my-new-project
 # 交互式创建
 flexible-scaffold create react-antd my-project --interactive
 
-# 更新特定模板
+# 更新特定模板（仅Git模板）
 flexible-scaffold update react-antd
 
-# 批量更新所有模板
+# 批量更新所有模板（仅Git模板）
 flexible-scaffold update
 
 # 删除模板
@@ -341,11 +344,11 @@ npm run mcp
 ### 可用的MCP功能
 
 **🔧 工具 (Tools)**:
-- `add_scaffold_template`: 添加新模板
+- `add_scaffold_template`: 添加新模板（Git或本地）
 - `remove_scaffold_template`: 删除模板
-- `update_scaffold_template`: 更新特定模板
-- `update_all_scaffold_templates`: 批量更新所有模板
-- `list_scaffold_templates`: 列出所有模板
+- `update_scaffold_template`: 更新特定模板（仅Git模板）
+- `update_all_scaffold_templates`: 批量更新所有模板（仅Git模板）
+- `list_scaffold_templates`: 列出所有模板（Git和本地）
 - `create_project_from_scaffold`: 创建项目
 - `get_scaffold_template_info`: 获取模板详情
 - `validate_scaffold_template`: 验证模板
@@ -489,6 +492,25 @@ npm install
 npm run build
 npm run test
 ```
+
+## 🏷️ 版本历史
+
+- **v1.0.2** - 本地模板支持
+  - 支持本地目录模板 📁
+  - 双重模板类型识别（Git 🌐 vs 本地 📁）
+  - 更新CLI和MCP工具支持本地模板
+  - 增强交互式界面支持模板类型选择
+
+- **v1.0.1** - 错误修复和改进
+  - 修复MCP命令问题
+  - 更新文档
+
+- **v1.0.0** - 初始版本，核心功能
+  - 基本脚手架操作
+  - Git模板管理
+  - MCP服务器支持
+  - 交互式CLI
+  - TypeScript支持
 
 ---
 
