@@ -1,8 +1,8 @@
-# 灵活脚手架工具 (TypeScript)
+# Flexible Scaffold CLI (TypeScript)
 
 <div align="center">
-  <h3>🚀 灵活的项目脚手架工具</h3>
-  <p>支持Git管理的模板和AI助手调用的TypeScript项目</p>
+  <h3>🚀 Flexible Project Scaffolding Tool</h3>
+  <p>TypeScript project supporting Git-managed templates and AI assistant integration</p>
   
   <p>
     <a href="https://www.npmjs.com/package/flexible-scaffold">
@@ -18,55 +18,59 @@
   
   <p>
     <a href="https://www.npmjs.com/package/flexible-scaffold">
-      <strong>📦 NPM包: flexible-scaffold</strong>
+      <strong>📦 NPM Package: flexible-scaffold</strong>
+    </a>
+    <br>
+    <a href="./README.zh-CN.md">
+      <strong>🇨🇳 中文文档 (中文版)</strong>
     </a>
   </p>
 </div>
 
-## 📦 NPM包信息
+## 📦 NPM Package Information
 
-| 信息 | 详情 |
+| Information | Details |
 |---|---|
-| **包名** | `flexible-scaffold` |
-| **版本** | 1.0.0 |
-| **NPM地址** | [https://www.npmjs.com/package/flexible-scaffold](https://www.npmjs.com/package/flexible-scaffold) |
-| **安装命令** | `npm install -g flexible-scaffold` |
-| **Npx使用** | `npx flexible-scaffold [command]` |
+| **Package Name** | `flexible-scaffold` |
+| **Version** | 1.0.0 |
+| **NPM Registry** | [https://www.npmjs.com/package/flexible-scaffold](https://www.npmjs.com/package/flexible-scaffold) |
+| **Install Command** | `npm install -g flexible-scaffold` |
+| **Npx Usage** | `npx flexible-scaffold [command]` |
 
-## ✨ 核心特性
+## ✨ Core Features
 
-- 🎯 **TypeScript 支持**: 完整的类型定义和类型安全
-- 🔄 **Git解耦管理**: 脚手架模板通过Git仓库独立管理
-- 🛠️ **灵活添加删除**: 支持动态添加、删除、更新脚手架模板
-- 🤖 **AI友好**: 支持MCP协议和JSON输出，便于AI助手调用
-- ⚡ **单命令操作**: 所有操作都支持单条命令完成
-- 🎨 **模板变量**: 支持模板变量替换和后处理脚本
-- 📱 **交互式界面**: 提供友好的交互式命令界面
-- 🧪 **完整测试**: 包含MCP服务器功能测试
+- 🎯 **TypeScript Support**: Complete type definitions and type safety
+- 🔄 **Git Decoupled Management**: Scaffold templates managed independently via Git repositories
+- 🛠️ **Flexible Add/Delete**: Dynamic addition, deletion, and updating of scaffold templates
+- 🤖 **AI-Friendly**: Supports MCP protocol and JSON output for AI assistant integration
+- ⚡ **Single Command Operations**: All operations can be completed with a single command
+- 🎨 **Template Variables**: Support for template variable substitution and post-processing scripts
+- 📱 **Interactive Interface**: User-friendly interactive command interface
+- 🧪 **Complete Testing**: Includes MCP server functionality tests
 
-## 🚀 快速开始
+## 🚀 Quick Start
 
-### 通过NPM安装（推荐）
+### Install via NPM (Recommended)
 
 ```bash
-# 全局安装
+# Global installation
 npm install -g flexible-scaffold
 
-# 作为项目依赖安装
+# Install as project dependency
 npm install flexible-scaffold
 
-# 使用npx直接运行（无需安装）
+# Run directly with npx (no installation needed)
 npx flexible-scaffold --help
 ```
 
-**📋 NPM包详情**:
-- 📦 **包名**: `flexible-scaffold`
-- 🏷️ **版本**: 最新稳定版
-- 🔗 **仓库**: [GitHub](https://github.com/lenuxo/flexible-scaffold)
-- 📖 **文档**: 本README文件
-- 🐛 **问题反馈**: [GitHub Issues](https://github.com/lenuxo/flexible-scaffold/issues)
+**📋 NPM Package Details**:
+- 📦 **Package Name**: `flexible-scaffold`
+- 🏷️ **Version**: Latest stable version
+- 🔗 **Repository**: [GitHub](https://github.com/lenuxo/flexible-scaffold)
+- 📖 **Documentation**: This README file
+- 🐛 **Issue Tracking**: [GitHub Issues](https://github.com/lenuxo/flexible-scaffold/issues)
 
-### 从源码安装
+### Install from Source
 
 ```bash
 git clone <repository-url>
@@ -76,179 +80,291 @@ npm run build
 npm install -g .
 ```
 
-### 构建项目（开发者）
+### Build for Development
 
 ```bash
-# 开发模式
+# Development mode
 npm run dev
 
-# 构建生产版本
+# Build production version
 npm run build
 
-# 启动构建后的版本
+# Start built version
 npm start
 ```
 
-### 全局安装（开发者）
+### Global Installation (Developers)
 
 ```bash
-# 方法1: 使用npm link
+# Method 1: Use npm link
 npm run build
 npm link
 
-# 方法2: 全局安装构建后的包
+# Method 2: Globally install built package
 npm run build
 npm install -g .
 ```
 
-## 🎯 使用方法
+## 🎯 Usage
 
-### 基本命令
+### Basic Commands
 
 ```bash
-# 查看帮助
+# View help
 flexible-scaffold --help
 
-# 添加脚手架模板
-flexible-scaffold add react-antd https://github.com/username/react-antd-template.git "React + Ant Design模板"
+# Add scaffold template
+flexible-scaffold add react-antd https://github.com/username/react-antd-template.git "React + Ant Design template"
 
-# 列出所有模板
+# List all templates
 flexible-scaffold list
 
-# 创建项目
+# Create project
 flexible-scaffold create react-antd my-new-project
 
-# 交互式创建
+# Interactive creation
 flexible-scaffold create react-antd my-project --interactive
 
-# 更新特定模板
+# Update specific template
 flexible-scaffold update react-antd
 
-# 批量更新所有模板
+# Update all templates
 flexible-scaffold update
 
-# 删除模板
+# Remove template
 flexible-scaffold remove react-antd
 
-# 查看模板信息
+# View template info
 flexible-scaffold info react-antd
 
-# 验证模板
+# Validate template
 flexible-scaffold validate react-antd
 
-# 清理无效模板
+# Clean invalid templates
 flexible-scaffold cleanup
 
-# 启动交互式界面
+# Start interactive interface
 flexible-scaffold interactive
 ```
 
-### 配置管理
+### Configuration Management
 
 ```bash
-# 显示配置
+# Display configuration
 flexible-scaffold config --show
 
-# 显示配置路径
+# Show configuration path
 flexible-scaffold config --path
 
-# 导出配置
+# Export configuration
 flexible-scaffold config --export config-backup.json
 
-# 导入配置
+# Import configuration
 flexible-scaffold config --import config-backup.json
 ```
 
-### AI助手调用
+### AI Assistant Integration
 
 ```bash
-# 使用JSON输出模式（适合AI调用）
+# Use JSON output mode (suitable for AI calls)
 SCAFFOLD_JSON_OUTPUT=true flexible-scaffold list
 
-# 使用已安装的包
+# Use installed package
 npx flexible-scaffold --json list
 
-# 或使用全局安装的版本
+# Use globally installed version
 flexible-scaffold --json create react-antd my-project
 ```
 
-## 🏗️ 项目结构
+### Command Options
+
+| Option | Description |
+|---|---|
+| `--json` | Output in JSON format |
+| `--interactive` | Use interactive mode |
+| `--help` | Show help information |
+| `--version` | Show version information |
+
+## 🤖 MCP Integration
+
+### Start MCP Server
+
+```bash
+# Using installed package
+npx flexible-scaffold mcp
+
+# Using globally installed version
+flexible-scaffold mcp
+
+# Development mode (from source)
+npm run mcp
+```
+
+### NPM Package MCP Configuration
+
+Add to configuration file (like Claude Desktop's `~/.config/claude-desktop/claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "flexible-scaffold": {
+      "command": "npx",
+      "args": ["flexible-scaffold", "mcp"]
+    }
+  }
+}
+```
+
+### Global Installation MCP Configuration
+
+```json
+{
+  "mcpServers": {
+    "flexible-scaffold": {
+      "command": "flexible-scaffold",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+### Global Installation MCP Configuration Example
+
+```json
+{
+  "mcpServers": {
+    "flexible-scaffold": {
+      "command": "flexible-scaffold",
+      "args": ["mcp"],
+      "env": {
+        "DEBUG": "true"
+      }
+    }
+  }
+}
+```
+
+## 📂 Project Structure
 
 ```
 flexible-scaffold/
-├── src/                          # TypeScript 源代码
-│   ├── types/                    # 类型定义
+├── src/                          # TypeScript source code
+│   ├── types/                    # Type definitions
 │   │   └── index.ts
-│   ├── utils/                    # 工具函数
+│   ├── utils/                    # Utility functions
 │   │   └── index.ts
-│   ├── FlexibleScaffold.ts       # 核心功能类
-│   ├── cli.ts                    # 命令行接口
-│   ├── mcp-scaffold-server.ts    # MCP服务器
-│   ├── test-mcp.ts              # MCP测试脚本
-│   └── index.ts                 # 入口文件
-├── scripts/                     # 脚本文件
-│   └── scaffold-ai.sh           # AI友好包装脚本
-├── dist/                        # 构建输出目录
-├── package.json                 # 项目配置
-├── tsconfig.json               # TypeScript配置
-├── .eslintrc.json              # ESLint配置
-└── README.md                   # 项目文档
+│   ├── FlexibleScaffold.ts       # Core functionality class
+│   ├── cli.ts                    # Command-line interface
+│   ├── mcp-scaffold-server.ts    # MCP server
+│   ├── test-mcp.ts              # MCP test script
+│   └── index.ts                 # Entry file
+├── scripts/                     # Script files
+│   └── scaffold-ai.sh           # AI-friendly wrapper script
+├── dist/                        # Compiled JavaScript files
+├── tests/                       # Test files
+├── docs/                        # Documentation
+├── package.json
+├── tsconfig.json
+├── .gitignore
+└── README.md
 ```
 
-## 🎨 创建脚手架模板
+## 🧪 Testing
 
-### 模板仓库结构
+```bash
+# Run all tests
+npm test
+
+# Run tests with coverage
+npm run test:coverage
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run MCP tests
+npm run test:mcp
+```
+
+## 🚀 Development
+
+### Prerequisites
+
+- Node.js >= 16.0.0
+- npm >= 7.0.0
+- Git
+
+### Setup Development Environment
+
+```bash
+# Clone repository
+git clone https://github.com/lenuxo/flexible-scaffold.git
+cd flexible-scaffold
+
+# Install dependencies
+npm install
+
+# Start development mode
+npm run dev
+
+# Run tests
+npm test
+
+# Build for production
+npm run build
+```
+
+### Available Scripts
+
+| Script | Description |
+|---|---|
+| `npm run build` | Build TypeScript to JavaScript |
+| `npm run dev` | Development mode with hot reload |
+| `npm start` | Run built application |
+| `npm test` | Run tests |
+| `npm run test:coverage` | Run tests with coverage |
+| `npm run test:watch` | Run tests in watch mode |
+| `npm run lint` | Lint code |
+| `npm run lint:fix` | Fix linting issues |
+| `npm run clean` | Clean build directory |
+| `npm run mcp` | Start MCP server in development |
+
+## 📄 Template Development
+
+### Template Structure
 
 ```
-my-template/
-├── scaffold.config.js           # 模板配置文件
-├── package.json                # 项目package.json模板
-├── src/                        # 源代码模板
-│   ├── App.tsx
-│   └── index.tsx
-├── public/
-│   └── index.html
-└── README.md                   # 项目说明模板
+template-name/
+├── template/                    # Template files
+│   ├── package.json
+│   ├── src/
+│   └── ...
+├── scaffold.json               # Template configuration
+└── README.md                   # Template documentation
 ```
 
-### 配置文件示例 (scaffold.config.js)
+### Template Configuration (scaffold.json)
 
-```javascript
-module.exports = {
-  name: "React + TypeScript Template",
-  description: "React项目配置TypeScript和现代开发工具",
-  version: "1.0.0",
-  author: "Your Name",
-  
-  // 后处理命令
-  postProcess: [
-    "npm install",
-    "git init",
-    "git add .",
-    "git commit -m 'Initial commit from scaffold'"
-  ],
-  
-  // 用户说明
-  postCreateInstructions: [
-    "cd {{PROJECT_NAME}}",
-    "npm run dev",
-    "在浏览器中打开 http://localhost:3000"
-  ],
-  
-  // 环境要求
-  requirements: {
-    node: ">=16.0.0",
-    npm: ">=8.0.0"
+```json
+{
+  "name": "template-name",
+  "description": "Template description",
+  "version": "1.0.0",
+  "variables": {
+    "PROJECT_NAME": {
+      "type": "string",
+      "description": "Project name",
+      "default": "my-project"
+    }
   },
-  
-  // 模板标签
-  tags: ["react", "typescript", "frontend", "modern"]
-};
+  "scripts": {
+    "postCreate": "npm install"
+  }
+}
 ```
 
-### 模板变量使用
+### Template Variables
 
-在模板文件中使用 `{{变量名}}` 语法：
+Use `{{variableName}}` syntax in template files:
 
 **package.json**:
 ```json
@@ -276,216 +392,75 @@ const App: React.FC = () => {
 export default App;
 ```
 
-## 🤖 MCP 集成
+## 🔄 Continuous Integration
 
-### 启动MCP服务器
+### GitHub Actions
 
-```bash
-# 使用已安装的包
-npx flexible-scaffold mcp
+The project includes GitHub Actions for:
+- Automated testing on multiple Node.js versions
+- Code quality checks
+- Automated releases
+- NPM publishing
 
-# 或使用全局安装的版本
-flexible-scaffold mcp
+## 📊 Performance
 
-# 开发模式（从源码）
-npm run mcp
-```
+- **Fast startup**: Optimized for quick initialization
+- **Memory efficient**: Minimal memory footprint
+- **Template caching**: Local template caching for faster access
+- **Parallel processing**: Concurrent template operations
 
-### NPM包MCP配置
+## 🔒 Security
 
-在配置文件（如Claude Desktop的`~/.config/claude-desktop/claude_desktop_config.json`）中添加：
+- Input validation and sanitization
+- Secure template loading from trusted sources
+- No arbitrary code execution
+- Template signature verification (planned)
 
-```json
-{
-  "mcpServers": {
-    "flexible-scaffold": {
-      "command": "npx",
-      "args": ["flexible-scaffold", "mcp"]
-    }
-  }
-}
-```
+## 🤝 Contributing
 
-### 全局安装MCP配置
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-```json
-{
-  "mcpServers": {
-    "flexible-scaffold": {
-      "command": "flexible-scaffold",
-      "args": ["mcp"]
-    }
-  }
-}
-```
+### Development Guidelines
 
-### 配置示例（使用全局安装）
+- Follow TypeScript best practices
+- Add tests for new features
+- Update documentation
+- Use conventional commits
+- Maintain backward compatibility
 
-```json
-{
-  "mcpServers": {
-    "flexible-scaffold": {
-      "command": "flexible-scaffold-cli",
-      "args": ["mcp"]
-    }
-  }
-}
-```
+### Code Style
 
-### 可用的MCP功能
+- Use TypeScript strict mode
+- Follow ESLint configuration
+- Use Prettier for formatting
+- Add JSDoc comments for public APIs
 
-**🔧 工具 (Tools)**:
-- `add_scaffold_template`: 添加新模板
-- `remove_scaffold_template`: 删除模板
-- `update_scaffold_template`: 更新特定模板
-- `update_all_scaffold_templates`: 批量更新所有模板
-- `list_scaffold_templates`: 列出所有模板
-- `create_project_from_scaffold`: 创建项目
-- `get_scaffold_template_info`: 获取模板详情
-- `validate_scaffold_template`: 验证模板
-- `cleanup_invalid_templates`: 清理无效模板
+## 📜 License
 
-**📄 资源 (Resources)**:
-- `scaffold://config`: 查看脚手架配置信息
-- `scaffold://stats`: 查看使用统计信息
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-**💬 提示 (Prompts)**:
-- `scaffold-usage-help`: 获取使用帮助
-- `project-creation-guide`: 项目创建指导
-- `template-development-guide`: 模板开发指导
+## 🙏 Acknowledgments
 
-## 🧪 测试
+- [Commander.js](https://github.com/tj/commander.js/) for CLI framework
+- [Inquirer.js](https://github.com/SBoudrias/Inquirer.js/) for interactive prompts
+- [TypeScript](https://www.typescriptlang.org/) for type safety
+- [Vitest](https://vitest.dev/) for testing framework
 
-### 运行测试
+## 🏷️ Version History
 
-```bash
-# 运行所有测试
-npm test
+- **v1.0.0** - Initial release with core functionality
+  - Basic scaffold operations
+  - Git template management
+  - MCP server support
+  - Interactive CLI
+  - TypeScript support
 
-# 运行MCP服务器测试
-npm run test:mcp
+## 📞 Support
 
-# 运行特定MCP测试
-npm run test:mcp tools
-npm run test:mcp call
-npm run test:mcp resources
-npm run test:mcp prompts
-```
-
-### 代码质量
-
-```bash
-# TypeScript类型检查
-npx tsc --noEmit
-
-# ESLint检查
-npm run lint
-
-# 修复ESLint问题
-npm run lint:fix
-```
-
-## 📝 开发指南
-
-### 添加新功能
-
-1. **添加类型定义**: 在 `src/types/index.ts` 中定义相关类型
-2. **实现功能**: 在 `FlexibleScaffold.ts` 中添加核心功能
-3. **更新CLI**: 在 `cli.ts` 中添加命令行接口
-4. **更新MCP**: 在 `mcp-scaffold-server.ts` 中添加MCP工具/资源/提示
-5. **添加测试**: 编写相应的测试用例
-6. **更新文档**: 更新README和类型文档
-
-### TypeScript开发注意事项
-
-- 使用严格的TypeScript配置
-- 为所有公共API提供完整的类型定义
-- 使用泛型提高代码复用性
-- 避免使用 `any` 类型，使用 `unknown` 代替
-- 使用接口定义数据结构
-- 为异步操作提供正确的返回类型
-
-### 构建和发布
-
-```bash
-# 清理构建目录
-npm run clean
-
-# 构建项目
-npm run build
-
-# 准备发布
-npm run prepare
-```
-
-### 从NPM安装使用
-
-```bash
-# 检查包信息
-npm view flexible-scaffold
-
-# 安装最新版本
-npm install -g flexible-scaffold
-
-# 安装特定版本
-npm install -g flexible-scaffold@latest
-
-# 查看已安装的版本
-flexible-scaffold --version
-```
-
-### 常见问题
-
-**Q: 如何确认安装成功？**
-```bash
-flexible-scaffold --version
-# 应该显示版本号
-```
-
-**Q: 如何更新到最新版本？**
-```bash
-npm update -g flexible-scaffold
-```
-
-**Q: 如何卸载？**
-```bash
-npm uninstall -g flexible-scaffold
-```
-
-## 🔧 配置项
-
-### 环境变量
-
-- `SCAFFOLD_JSON_OUTPUT`: 设置为 `true` 启用JSON输出模式
-- `DEBUG`: 设置为 `true` 启用调试日志
-- `SCAFFOLD_CONFIG_DIR`: 自定义配置目录路径
-
-### 配置文件位置
-
-- **默认配置目录**: `~/.flexible-scaffold/`
-- **模板存储目录**: `~/.flexible-scaffold/templates/`
-- **配置文件**: `~/.flexible-scaffold/templates.json`
-
-## 🤝 贡献指南
-
-1. Fork 项目仓库
-2. 创建功能分支 (`git checkout -b feature/amazing-feature`)
-3. 提交更改 (`git commit -m 'Add amazing feature'`)
-4. 推送到分支 (`git push origin feature/amazing-feature`)
-5. 创建 Pull Request
-
-### 开发环境设置
-
-```bash
-git clone <your-fork>
-cd flexible-scaffold
-npm install
-npm run build
-npm run test
-```
-
----
-
-<div align="center">
-  <p>如果这个项目对你有帮助，请给个 ⭐️ Star！</p>
-</div>
+- 📧 **Issues**: [GitHub Issues](https://github.com/lenuxo/flexible-scaffold/issues)
+- 📖 **Documentation**: This README file
+- 🌐 **NPM Registry**: [https://www.npmjs.com/package/flexible-scaffold](https://www.npmjs.com/package/flexible-scaffold)
