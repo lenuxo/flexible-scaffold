@@ -17,9 +17,11 @@ export class ScaffoldMCPServer {
   private scaffold: FlexibleScaffold;
 
   constructor() {
+    const packageJson = require('../package.json');
+    
     this.server = new McpServer({
       name: "flexible-scaffold",
-      version: "1.0.0",
+      version: packageJson.version,
       description: "灵活的项目脚手架工具，支持Git管理的模板"
     });
 

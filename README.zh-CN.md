@@ -28,7 +28,7 @@
 | 信息 | 详情 |
 |---|---|
 | **包名** | `flexible-scaffold` |
-| **版本** | 1.0.0 |
+| **版本** | 1.0.1 |
 | **NPM地址** | [https://www.npmjs.com/package/flexible-scaffold](https://www.npmjs.com/package/flexible-scaffold) |
 | **安装命令** | `npm install -g flexible-scaffold` |
 | **Npx使用** | `npx flexible-scaffold [command]` |
@@ -114,6 +114,8 @@ flexible-scaffold add react-antd https://github.com/username/react-antd-template
 
 # 列出所有模板
 flexible-scaffold list
+# 或
+flexible-scaffold ls
 
 # 创建项目
 flexible-scaffold create react-antd my-new-project
@@ -129,6 +131,8 @@ flexible-scaffold update
 
 # 删除模板
 flexible-scaffold remove react-antd
+# 或
+flexible-scaffold rm react-antd
 
 # 查看模板信息
 flexible-scaffold info react-antd
@@ -141,6 +145,8 @@ flexible-scaffold cleanup
 
 # 启动交互式界面
 flexible-scaffold interactive
+# 或
+flexible-scaffold i
 ```
 
 ### 配置管理
@@ -325,7 +331,7 @@ npm run mcp
 {
   "mcpServers": {
     "flexible-scaffold": {
-      "command": "flexible-scaffold-cli",
+      "command": "flexible-scaffold",
       "args": ["mcp"]
     }
   }

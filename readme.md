@@ -32,7 +32,7 @@
 | Information | Details |
 |---|---|
 | **Package Name** | `flexible-scaffold` |
-| **Version** | 1.0.0 |
+| **Version** | 1.0.1 |
 | **NPM Registry** | [https://www.npmjs.com/package/flexible-scaffold](https://www.npmjs.com/package/flexible-scaffold) |
 | **Install Command** | `npm install -g flexible-scaffold` |
 | **Npx Usage** | `npx flexible-scaffold [command]` |
@@ -118,6 +118,8 @@ flexible-scaffold add react-antd https://github.com/username/react-antd-template
 
 # List all templates
 flexible-scaffold list
+# or
+flexible-scaffold ls
 
 # Create project
 flexible-scaffold create react-antd my-new-project
@@ -133,6 +135,8 @@ flexible-scaffold update
 
 # Remove template
 flexible-scaffold remove react-antd
+# or
+flexible-scaffold rm react-antd
 
 # View template info
 flexible-scaffold info react-antd
@@ -145,6 +149,8 @@ flexible-scaffold cleanup
 
 # Start interactive interface
 flexible-scaffold interactive
+# or
+flexible-scaffold i
 ```
 
 ### Configuration Management
@@ -243,6 +249,28 @@ Add to configuration file (like Claude Desktop's `~/.config/claude-desktop/claud
   }
 }
 ```
+
+### Available MCP Features
+
+**🔧 MCP Tools**:
+- `add_scaffold_template`: Add new template
+- `remove_scaffold_template`: Remove template
+- `update_scaffold_template`: Update specific template
+- `update_all_scaffold_templates`: Update all templates
+- `list_scaffold_templates`: List all templates
+- `create_project_from_scaffold`: Create project from template
+- `get_scaffold_template_info`: Get template details
+- `validate_scaffold_template`: Validate template
+- `cleanup_invalid_templates`: Clean up invalid templates
+
+**📄 MCP Resources**:
+- `scaffold://config`: View scaffold configuration information
+- `scaffold://stats`: View usage statistics
+
+**💬 MCP Prompts**:
+- `scaffold-usage-help`: Get usage help
+- `project-creation-guide`: Project creation guidance
+- `template-development-guide`: Template development guidance
 
 ## 📂 Project Structure
 

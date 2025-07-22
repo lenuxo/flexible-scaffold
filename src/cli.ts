@@ -18,10 +18,12 @@ export class CLI {
   }
 
   private setupCommands(): void {
+    const packageJson = require('../package.json');
+    
     this.program
       .name('flexible-scaffold')
       .description('灵活的项目脚手架工具，支持Git管理的模板')
-      .version('1.0.0');
+      .version(packageJson.version);
 
     // 添加模板命令
     this.program
@@ -175,6 +177,31 @@ export class CLI {
       .description('启动交互式界面')
       .action(async () => {
         await this.interactiveMode();
+      });
+
+    // MCP 服务器命令
+    this.program
+      .command('mcp')
+      .description('启动 MCP 服务器')
+      .option('--stdio', '使用标准IO传输（默认）')
+      .option('--port <port>', '使用HTTP传输的端口')
+      .option('--host <host>', '使用HTTP传输的主机', 'localhost')
+      .action(async (options: { stdio?: boolean; port?: string; host?: string }) => {
+        try {
+          const { createScaffoldMCPServer } = await import('./mcp-scaffold-server');
+          
+          if (options.port) {
+            // HTTP模式需要额外依赖，暂不支持
+            logger.error('HTTP传输模式暂不支持，请使用 --stdio 模式');
+            process.exit(1);
+          }
+          
+          // 默认使用stdio模式
+          await createScaffoldMCPServer();
+        } catch (error) {
+          logger.error(`启动MCP服务器失败: ${error instanceof Error ? error.message : String(error)}`);
+          process.exit(1);
+        }
       });
   }
 
