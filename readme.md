@@ -32,7 +32,7 @@
 | Information | Details |
 |---|---|
 | **Package Name** | `flexible-scaffold` |
-| **Version** | 1.0.2 |
+| **Version** | 1.0.3 |
 | **NPM Registry** | [https://www.npmjs.com/package/flexible-scaffold](https://www.npmjs.com/package/flexible-scaffold) |
 | **Install Command** | `npm install -g flexible-scaffold` |
 | **Npx Usage** | `npx flexible-scaffold [command]` |
@@ -482,6 +482,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Vitest](https://vitest.dev/) for testing framework
 
 ## 🏷️ Version History
+
+- **v1.0.3** - Internationalization support and MCP commands optimization 🌍
+  - Added bilingual Chinese-English support 🇨🇳🇺🇸
+  - Optimized MCP command response formats
+  - Improved error handling and user prompts
+  - Enhanced CLI output internationalization experience
 
 - **v1.0.2** - Local template support
   - Support for local directory templates 📁
