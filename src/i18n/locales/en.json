@@ -1,0 +1,197 @@
+{
+  "common": {
+    "success": "Success",
+    "error": "Error",
+    "warning": "Warning",
+    "info": "Info",
+    "yes": "Yes",
+    "no": "No",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "finish": "Finish",
+    "loading": "Loading...",
+    "search": "Search",
+    "filter": "Filter",
+    "create": "Create",
+    "add": "Add",
+    "remove": "Remove",
+    "delete": "Delete",
+    "update": "Update",
+    "edit": "Edit",
+    "save": "Save",
+    "close": "Close",
+    "open": "Open",
+    "view": "View",
+    "list": "List",
+    "details": "Details",
+    "template": "Template",
+    "templates": "Templates",
+    "project": "Project",
+    "projects": "Projects",
+    "name": "Name",
+    "description": "Description",
+    "type": "Type",
+    "path": "Path",
+    "url": "URL",
+    "date": "Date",
+    "time": "Time",
+    "status": "Status",
+    "git": "Git",
+    "local": "Local",
+    "directory": "Directory",
+    "file": "File",
+    "folder": "Folder",
+    "source": "Source",
+    "target": "Target",
+    "language": "Language",
+    "select": "Select",
+    "choose": "Choose",
+    "optional": "Optional"
+  },
+  "mcp": {
+    "server": {
+      "description": "Fast project initialization and template management tool. Supports creating project templates from Git repositories or local directories for one-click generation of React, Vue, Node.js and other project structures. Use when users need to create new projects, set up project templates, or initialize code structures.",
+      "starting": "Flexible Scaffold MCP Server starting...",
+      "connected": "MCP Server connected successfully",
+      "failed": "Failed to start MCP server"
+    },
+    "tools": {
+      "add_project_template": {
+        "description": "Add a new project template from Git repository URL or local directory path",
+        "name_desc": "Template name (unique identifier, e.g., 'react-vite', 'nextjs-blog')",
+        "source_desc": "Git repository URL (e.g., https://github.com/user/template-repo) or local directory path",
+        "description_desc": "Template description (optional, describes the purpose and tech stack of this template)"
+      },
+      "remove_project_template": {
+        "description": "Remove a scaffold template",
+        "name_desc": "Name of the template to remove"
+      },
+      "update_project_template": {
+        "description": "Update a scaffold template to the latest version",
+        "name_desc": "Name of the template to update, e.g., 'react-vite', 'nextjs-blog'"
+      },
+      "update_all_templates": {
+        "description": "Update all scaffold templates to the latest version"
+      },
+      "list_project_templates": {
+        "description": "List all available project templates"
+      },
+      "initialize_project": {
+        "description": "Create a new project using a scaffold template",
+        "template_name_desc": "Template name to use, e.g., 'react-vite', 'nextjs-blog', 'express-api'",
+        "project_name_desc": "Name of the new project, will be used as folder name",
+        "target_dir_desc": "Target directory path (optional, defaults to current directory)",
+        "variables_desc": "Custom template variables (optional, e.g., {\"API_KEY\": \"your-key\"})"
+      },
+      "get_template_info": {
+        "description": "Get detailed information about a template",
+        "name_desc": "Template name, e.g., 'react-vite', 'nextjs-blog'"
+      },
+      "validate_template": {
+        "description": "Validate if a template is available for use",
+        "name_desc": "Template name to validate, e.g., 'react-vite', 'nextjs-blog'"
+      },
+      "cleanup_invalid_templates": {
+        "description": "Clean up invalid templates"
+      }
+    },
+    "messages": {
+      "template_added": "Successfully added {type} template \"{name}\"",
+      "template_add_failed": "Failed to add template: {error}",
+      "template_removed": "Successfully removed template \"{name}\"",
+      "template_remove_failed": "Failed to remove template: {error}",
+      "template_updated": "Successfully updated template \"{name}\" to latest version",
+      "template_update_failed": "Failed to update template: {error}",
+      "all_templates_updated": "Successfully updated all templates",
+      "templates_update_failed": "Failed to update templates: {error}",
+      "no_templates": "No available templates",
+      "available_templates": "Available Templates",
+      "project_created": "Project \"{name}\" created successfully!",
+      "project_create_failed": "Failed to create project: {error}",
+      "template_info": "Template Details: {name}",
+      "template_not_found": "Template \"{name}\" does not exist",
+      "template_valid": "Template \"{name}\" validation passed, ready to use",
+      "template_invalid": "Template validation failed: {error}",
+      "cleanup_complete": "Cleanup completed: {message}",
+      "cleanup_failed": "Cleanup failed: {error}"
+    },
+    "prompts": {
+      "usage_help": "Scaffold tool usage help, guiding how to create projects and manage templates",
+      "create_project": "Create new project guidance prompt, recommend appropriate templates based on requirements",
+      "add_template": "Create custom project template guidance prompt"
+    }
+  },
+  "cli": {
+    "description": "🚀 Powerful flexible project scaffolding tool - supports Git repositories and local directory templates, one-click generation of React/Vue/Node.js project structures, integrated AI assistant calling capabilities, and bilingual internationalization support",
+    "commands": {
+      "add": "Add new scaffold template",
+      "remove": "Remove scaffold template",
+      "update": "Update scaffold template",
+      "list": "List all available templates",
+      "create": "Create new project using scaffold template",
+      "info": "Show template detailed information",
+      "validate": "Validate if template is available",
+      "cleanup": "Clean up invalid templates",
+      "config": "Configuration management",
+      "interactive": "Launch interactive interface",
+      "mcp": "Start MCP server"
+    },
+    "options": {
+      "description": "Template description",
+      "json": "Output in JSON format",
+      "directory": "Target directory",
+      "interactive": "Interactive creation",
+      "show": "Show current configuration",
+      "path": "Show configuration path",
+      "export": "Export configuration to file",
+      "import": "Import configuration from file"
+    },
+    "messages": {
+      "select_action": "Select operation:",
+      "select_template": "Select project template:",
+      "input_project_name": "Enter project name:",
+      "input_template_name": "Enter template name:",
+      "input_description": "Template description (optional):",
+      "input_git_url": "Git repository URL:",
+      "input_local_path": "Local directory path:",
+      "select_template_type": "Select template type:",
+      "template_type_git": "Git repository template",
+      "template_type_local": "Local directory template",
+      "confirm_delete": "Are you sure you want to delete template \"{name}\"?",
+      "no_templates": "No available templates, please add templates first",
+      "config_directory": "Configuration directory:",
+      "templates_directory": "Templates directory:",
+      "operation_cancelled": "Operation cancelled",
+      "project_name_invalid": "Project name can only contain letters, numbers, hyphens and underscores",
+      "project_name_required": "Project name cannot be empty",
+      "git_url_invalid": "Please enter a valid Git URL",
+      "local_path_invalid": "Please enter a valid local directory path",
+      "local_path_not_exist": "Specified directory does not exist",
+      "local_path_not_directory": "Specified path is not a directory"
+    },
+    "interactive": {
+      "title": "🚀 Flexible Scaffold Tool - Interactive Interface",
+      "view_templates": "📋 View all templates",
+      "add_template": "➕ Add new template",
+      "create_project": "🚀 Create new project",
+      "update_template": "🔄 Update template",
+      "remove_template": "🗑️ Remove template",
+      "template_info": "🔍 View template information",
+      "cleanup_templates": "🧹 Clean up invalid templates",
+      "view_config": "⚙️ View configuration",
+      "exit": "❌ Exit",
+      "goodbye": "👋 Goodbye!",
+      "continue": "Press Enter to continue..."
+    }
+  },
+  "validation": {
+    "name_required": "Name is required",
+    "name_invalid": "Name can only contain letters, numbers, hyphens and underscores",
+    "url_required": "URL is required",
+    "url_invalid": "Please enter a valid URL",
+    "path_required": "Path is required",
+    "path_invalid": "Please enter a valid path"
+  }
+}

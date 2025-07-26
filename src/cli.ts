@@ -6,6 +6,7 @@ import chalk from 'chalk';
 import { FlexibleScaffold } from './FlexibleScaffold';
 import type { OperationResult } from './types';
 import { logger } from './utils';
+import { t, getCurrentLanguage, getAvailableLanguages, setLanguage } from './i18n';
 
 export class CLI {
   private scaffold: FlexibleScaffold;
@@ -14,7 +15,6 @@ export class CLI {
   constructor() {
     this.scaffold = new FlexibleScaffold();
     this.program = new Command();
-    this.setupCommands();
   }
 
   private setupCommands(): void {
@@ -22,17 +22,21 @@ export class CLI {
     
     this.program
       .name('flexible-scaffold')
-      .description('灵活的项目脚手架工具，支持Git管理的模板')
-      .version(packageJson.version);
+      .description(t('cli.description'))
+      .version(packageJson.version)
+      .option('--lang <language>', 'Set language (en/zh)');
 
     // 添加模板命令
     this.program
       .command('add')
-      .description('添加新的脚手架模板')
-      .argument('<name>', '模板名称')
-      .argument('<source>', 'Git仓库URL或本地目录路径')
-      .option('-d, --description <desc>', '模板描述')
+      .description(t('cli.commands.add'))
+      .argument('<name>', t('common.template') + ' ' + t('common.name'))
+      .argument('<source>', 'Git URL or local directory path')
+      .option('-d, --description <desc>', t('cli.options.description'))
       .action(async (name: string, source: string, options: { description?: string }) => {
+        // 处理语言选项
+        this.handleLanguageOption(this.program.opts());
+        
         const result = await this.scaffold.addTemplate(name, source, options.description);
         this.handleResult(result);
       });
@@ -41,9 +45,12 @@ export class CLI {
     this.program
       .command('remove')
       .alias('rm')
-      .description('删除脚手架模板')
-      .argument('<name>', '模板名称')
+      .description(t('cli.commands.remove'))
+      .argument('<name>', t('common.template') + ' ' + t('common.name'))
       .action(async (name: string) => {
+        // 处理语言选项
+        this.handleLanguageOption(this.program.opts());
+        
         const result = this.scaffold.removeTemplate(name);
         this.handleResult(result);
       });
@@ -51,9 +58,12 @@ export class CLI {
     // 更新模板命令
     this.program
       .command('update')
-      .description('更新脚手架模板')
-      .argument('[name]', '模板名称（可选，不指定则更新所有）')
+      .description(t('cli.commands.update'))
+      .argument('[name]', t('common.template') + ' ' + t('common.name') + ' (optional, updates all if not specified)')
       .action(async (name?: string) => {
+        // 处理语言选项
+        this.handleLanguageOption(this.program.opts());
+        
         if (name) {
           const result = await this.scaffold.updateTemplate(name);
           this.handleResult(result);
@@ -67,9 +77,12 @@ export class CLI {
     this.program
       .command('list')
       .alias('ls')
-      .description('列出所有可用模板')
-      .option('-j, --json', '以JSON格式输出')
+      .description(t('cli.commands.list'))
+      .option('-j, --json', t('cli.options.json'))
       .action(async (options: { json?: boolean }) => {
+        // 处理语言选项
+        this.handleLanguageOption(this.program.opts());
+        
         const result = this.scaffold.listTemplates();
         
         if (options.json || process.env.SCAFFOLD_JSON_OUTPUT === 'true') {
@@ -82,12 +95,15 @@ export class CLI {
     // 创建项目命令
     this.program
       .command('create')
-      .description('使用脚手架模板创建新项目')
-      .argument('<template-name>', '模板名称')
-      .argument('<project-name>', '项目名称')
-      .option('-d, --dir <directory>', '目标目录', '.')
-      .option('-i, --interactive', '交互式创建')
+      .description(t('cli.commands.create'))
+      .argument('<template-name>', t('common.template') + ' ' + t('common.name'))
+      .argument('<project-name>', t('common.project') + ' ' + t('common.name'))
+      .option('-d, --dir <directory>', t('cli.options.directory'), '.')
+      .option('-i, --interactive', t('cli.options.interactive'))
       .action(async (templateName: string, projectName: string, options: { dir?: string; interactive?: boolean }) => {
+        // 处理语言选项
+        this.handleLanguageOption(this.program.opts());
+        
         if (options.interactive) {
           await this.interactiveCreate();
         } else {
@@ -103,9 +119,9 @@ export class CLI {
     // 信息命令
     this.program
       .command('info')
-      .description('显示模板详细信息')
-      .argument('<name>', '模板名称')
-      .option('-j, --json', '以JSON格式输出')
+      .description(t('cli.commands.info'))
+      .argument('<name>', t('common.template') + ' ' + t('common.name'))
+      .option('-j, --json', t('cli.options.json'))
       .action(async (name: string, options: { json?: boolean }) => {
         const result = this.scaffold.getTemplateInfo(name);
         
@@ -121,8 +137,8 @@ export class CLI {
     // 验证命令
     this.program
       .command('validate')
-      .description('验证模板是否可用')
-      .argument('<name>', '模板名称')
+      .description(t('cli.commands.validate'))
+      .argument('<name>', t('common.template') + ' ' + t('common.name'))
       .action(async (name: string) => {
         const result = this.scaffold.validateTemplate(name);
         this.handleResult(result);
@@ -131,7 +147,7 @@ export class CLI {
     // 清理命令
     this.program
       .command('cleanup')
-      .description('清理无效的模板')
+      .description(t('cli.commands.cleanup'))
       .action(async () => {
         const result = this.scaffold.cleanupInvalidTemplates();
         this.handleResult(result);
@@ -140,11 +156,11 @@ export class CLI {
     // 配置命令
     this.program
       .command('config')
-      .description('配置管理')
-      .option('-s, --show', '显示当前配置')
-      .option('-p, --path', '显示配置路径')
-      .option('--export <file>', '导出配置到文件')
-      .option('--import <file>', '从文件导入配置')
+      .description(t('cli.commands.config'))
+      .option('-s, --show', t('cli.options.show'))
+      .option('-p, --path', t('cli.options.path'))
+      .option('--export <file>', t('cli.options.export'))
+      .option('--import <file>', t('cli.options.import'))
       .action(async (options: { 
         show?: boolean; 
         path?: boolean; 
@@ -159,14 +175,14 @@ export class CLI {
             this.handleResult(result);
           }
         } else if (options.path) {
-          console.log(`配置目录: ${this.scaffold.getConfigDir()}`);
-          console.log(`模板目录: ${this.scaffold.getTemplatesDir()}`);
+          console.log(`${t('cli.messages.config_directory')} ${this.scaffold.getConfigDir()}`);
+          console.log(`${t('cli.messages.templates_directory')} ${this.scaffold.getTemplatesDir()}`);
         } else if (options.export) {
           await this.exportConfig(options.export);
         } else if (options.import) {
           await this.importConfig(options.import);
         } else {
-          logger.info('使用 --help 查看配置命令选项');
+          logger.info(t('cli.messages.use_help'));
         }
       });
 
@@ -174,7 +190,7 @@ export class CLI {
     this.program
       .command('interactive')
       .alias('i')
-      .description('启动交互式界面')
+      .description(t('cli.commands.interactive'))
       .action(async () => {
         await this.interactiveMode();
       });
@@ -182,10 +198,10 @@ export class CLI {
     // MCP 服务器命令
     this.program
       .command('mcp')
-      .description('启动 MCP 服务器')
-      .option('--stdio', '使用标准IO传输（默认）')
-      .option('--port <port>', '使用HTTP传输的端口')
-      .option('--host <host>', '使用HTTP传输的主机', 'localhost')
+      .description(t('cli.commands.mcp'))
+      .option('--stdio', t('cli.options.stdio'))
+      .option('--port <port>', t('cli.options.port'))
+      .option('--host <host>', t('cli.options.host'), 'localhost')
       .action(async (options: { stdio?: boolean; port?: string; host?: string }) => {
         try {
           const { createScaffoldMCPServer } = await import('./mcp-scaffold-server');
@@ -213,7 +229,7 @@ export class CLI {
       const templatesResult = this.scaffold.listTemplates();
       
       if (!templatesResult.success || !templatesResult.templates || templatesResult.templates.length === 0) {
-        logger.error('没有可用的模板，请先添加模板');
+        logger.error(t('cli.messages.no_templates'));
         return;
       }
 
@@ -263,7 +279,7 @@ export class CLI {
    * 交互式主界面
    */
   private async interactiveMode(): Promise<void> {
-    console.log(chalk.blue.bold('\n🚀 灵活脚手架工具 - 交互式界面\n'));
+    console.log(chalk.blue.bold(`\n${t('cli.interactive.title')}\n`));
 
     while (true) {
       try {
@@ -271,23 +287,23 @@ export class CLI {
           {
             type: 'list',
             name: 'action',
-            message: '请选择操作:',
+            message: t('cli.messages.select_action'),
             choices: [
-              { name: '📋 查看所有模板', value: 'list' },
-              { name: '➕ 添加新模板', value: 'add' },
-              { name: '🚀 创建新项目', value: 'create' },
-              { name: '🔄 更新模板', value: 'update' },
-              { name: '🗑️  删除模板', value: 'remove' },
-              { name: '🔍 查看模板信息', value: 'info' },
-              { name: '🧹 清理无效模板', value: 'cleanup' },
-              { name: '⚙️  查看配置', value: 'config' },
-              { name: '❌ 退出', value: 'exit' },
+              { name: t('cli.interactive.view_templates'), value: 'list' },
+              { name: t('cli.interactive.add_template'), value: 'add' },
+              { name: t('cli.interactive.create_project'), value: 'create' },
+              { name: t('cli.interactive.update_template'), value: 'update' },
+              { name: t('cli.interactive.remove_template'), value: 'remove' },
+              { name: t('cli.interactive.template_info'), value: 'info' },
+              { name: t('cli.interactive.cleanup_templates'), value: 'cleanup' },
+              { name: t('cli.interactive.view_config'), value: 'config' },
+              { name: t('cli.interactive.exit'), value: 'exit' },
             ],
           },
         ]);
 
         if (action === 'exit') {
-          console.log(chalk.blue('👋 再见！'));
+          console.log(chalk.blue(t('cli.interactive.goodbye')));
           break;
         }
 
@@ -297,13 +313,13 @@ export class CLI {
         await inquirer.prompt([{
           type: 'input',
           name: 'continue',
-          message: '按回车键继续...',
+          message: t('cli.interactive.continue'),
         }]);
 
       } catch (error) {
         const err = error as { isTtyError?: boolean; message?: string };
         if (err.isTtyError || (err.message && err.message.includes('User force closed'))) {
-          console.log(chalk.blue('\n👋 再见！'));
+          console.log(chalk.blue(`\n${t('cli.interactive.goodbye')}`));
           break;
         }
         logger.error(`操作失败: ${error}`);
@@ -360,10 +376,10 @@ export class CLI {
       {
         type: 'list',
         name: 'templateType',
-        message: '选择模板类型:',
+        message: t('cli.messages.select_template_type'),
         choices: [
-          { name: '🌐 Git仓库模板', value: 'git' },
-          { name: '📁 本地目录模板', value: 'local' },
+          { name: t('cli.messages.template_type_git'), value: 'git' },
+          { name: t('cli.messages.template_type_local'), value: 'local' },
         ],
       },
     ]);
@@ -372,13 +388,13 @@ export class CLI {
       {
         type: 'input',
         name: 'name',
-        message: '模板名称:',
-        validate: (input: string) => input.trim() !== '' || '模板名称不能为空',
+        message: t('cli.messages.input_template_name'),
+        validate: (input: string) => input.trim() !== '' || t('validation.name_required'),
       },
       {
         type: 'input',
         name: 'description',
-        message: '模板描述 (可选):',
+        message: t('cli.messages.input_description'),
       },
     ];
 
@@ -387,11 +403,11 @@ export class CLI {
       sourceQuestion = {
         type: 'input',
         name: 'source',
-        message: 'Git仓库URL:',
+        message: t('cli.messages.input_git_url'),
         validate: (input: string) => {
-          if (!input.trim()) return 'Git URL不能为空';
+          if (!input.trim()) return t('validation.url_required');
           if (!/^(https?:\/\/)|(git@)|(ssh:\/\/)/.test(input)) {
-            return '请输入有效的Git URL';
+            return t('cli.messages.git_url_invalid');
           }
           return true;
         },
@@ -400,14 +416,14 @@ export class CLI {
       sourceQuestion = {
         type: 'input',
         name: 'source',
-        message: '本地目录路径:',
+        message: t('cli.messages.input_local_path'),
         validate: (input: string) => {
-          if (!input.trim()) return '本地路径不能为空';
+          if (!input.trim()) return t('validation.path_required');
           const fs = require('fs');
           const path = require('path');
           const fullPath = path.resolve(input.trim());
-          if (!fs.existsSync(fullPath)) return '指定的目录不存在';
-          if (!fs.statSync(fullPath).isDirectory()) return '指定的路径不是目录';
+          if (!fs.existsSync(fullPath)) return t('cli.messages.local_path_not_exist');
+          if (!fs.statSync(fullPath).isDirectory()) return t('cli.messages.local_path_not_directory');
           return true;
         },
       };
@@ -431,12 +447,12 @@ export class CLI {
     const templatesResult = this.scaffold.listTemplates();
     
     if (!templatesResult.success || !templatesResult.templates || templatesResult.templates.length === 0) {
-      logger.error('没有可用的模板');
+      logger.error(t('cli.messages.no_templates'));
       return;
     }
 
     const choices = [
-      { name: '🔄 更新所有模板', value: '__all__' },
+      { name: '🔄 ' + t('cli.interactive.update_template'), value: '__all__' },
       ...templatesResult.templates.map(template => ({
         name: `${template.name} - ${template.description}`,
         value: template.name,
@@ -447,7 +463,7 @@ export class CLI {
       {
         type: 'list',
         name: 'templateName',
-        message: '选择要更新的模板:',
+        message: t('cli.messages.select_template') + ' ' + t('common.update'),
         choices,
       },
     ]);
@@ -468,7 +484,7 @@ export class CLI {
     const templatesResult = this.scaffold.listTemplates();
     
     if (!templatesResult.success || !templatesResult.templates || templatesResult.templates.length === 0) {
-      logger.error('没有可用的模板');
+      logger.error(t('cli.messages.no_templates'));
       return;
     }
 
@@ -476,7 +492,7 @@ export class CLI {
       {
         type: 'list',
         name: 'templateName',
-        message: '选择要删除的模板:',
+        message: t('cli.messages.select_template') + ' ' + t('common.remove'),
         choices: templatesResult.templates.map(template => ({
           name: `${template.name} - ${template.description}`,
           value: template.name,
@@ -488,7 +504,7 @@ export class CLI {
       {
         type: 'confirm',
         name: 'confirm',
-        message: `确定要删除模板 "${templateName}" 吗？`,
+        message: t('cli.messages.confirm_delete').replace('{name}', templateName),
         default: false,
       },
     ]);
@@ -497,7 +513,7 @@ export class CLI {
       const result = this.scaffold.removeTemplate(templateName);
       this.handleResult(result);
     } else {
-      logger.info('取消删除操作');
+      logger.info(t('cli.messages.operation_cancelled'));
     }
   }
 
@@ -508,7 +524,7 @@ export class CLI {
     const templatesResult = this.scaffold.listTemplates();
     
     if (!templatesResult.success || !templatesResult.templates || templatesResult.templates.length === 0) {
-      logger.error('没有可用的模板');
+      logger.error(t('cli.messages.no_templates'));
       return;
     }
 
@@ -516,7 +532,7 @@ export class CLI {
       {
         type: 'list',
         name: 'templateName',
-        message: '选择要查看的模板:',
+        message: t('cli.messages.select_template') + ' ' + t('common.view'),
         choices: templatesResult.templates.map(template => ({
           name: `${template.name} - ${template.description}`,
           value: template.name,
@@ -536,33 +552,33 @@ export class CLI {
    * 显示模板详细信息
    */
   private displayTemplateInfo(name: string, template: any): void {
-    console.log(chalk.blue.bold(`\n📋 模板详情: ${name}\n`));
-    console.log(`📝 描述: ${template.description || '无描述'}`);
-    console.log(`📅 添加时间: ${new Date(template.addedAt).toLocaleString()}`);
+    console.log(chalk.blue.bold(`\n📋 ${t('mcp.messages.template_info').replace('{name}', name)}\n`));
+    console.log(`📝 ${t('common.description')}: ${template.description || t('common.optional')}`);
+    console.log(`📅 ${t('common.date')}: ${new Date(template.addedAt).toLocaleString()}`);
     
     if (template.type === 'git') {
-      console.log(`🔗 Git URL: ${template.gitUrl}`);
+      console.log(`🔗 Git ${t('common.url')}: ${template.gitUrl}`);
     } else {
-      console.log(`📁 源路径: ${template.sourcePath}`);
-      console.log(`🏷️  类型: 本地模板`);
+      console.log(`📁 ${t('common.source')} ${t('common.path')}: ${template.sourcePath}`);
+      console.log(`🏷️  ${t('common.type')}: ${t('common.local')} ${t('common.template')}`);
     }
     
     if (template.updatedAt) {
-      console.log(`🔄 最后更新: ${new Date(template.updatedAt).toLocaleString()}`);
+      console.log(`🔄 ${t('common.last')} ${t('common.update')}: ${new Date(template.updatedAt).toLocaleString()}`);
     }
     
     if (template.config?.tags) {
-      console.log(`🏷️  标签: ${template.config.tags.join(', ')}`);
+      console.log(`🏷️  ${t('common.tags')}: ${template.config.tags.join(', ')}`);
     }
     
     if (template.config?.postCreateInstructions) {
-      console.log('\n📝 创建后说明:');
+      console.log(`\n📝 ${t('common.create')} ${t('common.after')} ${t('common.instructions')}:`);
       template.config.postCreateInstructions.forEach((instruction: string) => {
         console.log(`  • ${instruction}`);
       });
     }
     
-    console.log(`📁 本地路径: ${template.localPath}`);
+    console.log(`📁 ${t('common.local')} ${t('common.path')}: ${template.localPath}`);
   }
 
   /**
@@ -574,7 +590,7 @@ export class CLI {
       if (result.success) {
         const fs = await import('fs');
         fs.writeFileSync(filePath, JSON.stringify(result.data, null, 2));
-        logger.success(`配置已导出到: ${filePath}`);
+        logger.success(`${t('common.configuration')} ${t('common.export')} ${t('common.to')}: ${filePath}`);
       } else {
         this.handleResult(result);
       }
@@ -621,9 +637,34 @@ export class CLI {
   }
 
   /**
+   * 处理语言选项
+   */
+  private handleLanguageOption(options: any): void {
+    if (options.lang) {
+      const { setLanguage } = require('./i18n');
+      setLanguage(options.lang);
+    }
+  }
+
+  /**
    * 运行CLI
    */
   public async run(argv: string[]): Promise<void> {
+    // 解析参数以处理语言选项
+    const parsed = this.program.parseOptions(argv);
+    
+    if (parsed.unknown && parsed.unknown.includes('--lang')) {
+      const langIndex = parsed.unknown.indexOf('--lang');
+      if (langIndex !== -1 && langIndex + 1 < parsed.unknown.length) {
+        const lang = parsed.unknown[langIndex + 1];
+        const { setLanguage } = require('./i18n');
+        await setLanguage(lang);
+      }
+    }
+    
+    // 设置命令
+    this.setupCommands();
+    
     await this.program.parseAsync(argv);
   }
 }

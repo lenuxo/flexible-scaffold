@@ -45,5 +45,5 @@ logs/
 *.log
 
 # AI
-.claude
+.claude/
 claude.md

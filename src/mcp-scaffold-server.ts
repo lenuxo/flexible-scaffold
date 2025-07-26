@@ -8,6 +8,7 @@ import type {
   TemplateInfo 
 } from './types';
 import { logger } from './utils';
+import { t } from './i18n';
 
 /**
  * MCP 服务器类
@@ -22,7 +23,7 @@ export class ScaffoldMCPServer {
     this.server = new McpServer({
       name: "flexible-scaffold",
       version: packageJson.version,
-      description: "灵活的项目脚手架工具，支持Git管理的模板"
+      description: t('mcp.server.description')
     });
 
     this.scaffold = new FlexibleScaffold();
@@ -37,11 +38,11 @@ export class ScaffoldMCPServer {
   private setupTools(): void {
     // 添加模板工具
     this.server.tool(
-      "add_scaffold_template",
+      "add_project_template",
       {
-        name: z.string().describe("模板名称（唯一标识符）"),
-        source: z.string().describe("Git仓库URL或本地目录路径"), 
-        description: z.string().optional().describe("模板描述（可选）")
+        name: z.string().describe(t('mcp.tools.add_project_template.name_desc')),
+        source: z.string().describe(t('mcp.tools.add_project_template.source_desc')), 
+        description: z.string().optional().describe(t('mcp.tools.add_project_template.description_desc'))
       },
       async ({ name, source, description }) => {
         try {
@@ -49,20 +50,20 @@ export class ScaffoldMCPServer {
           
           if (result.success) {
             const isGitUrl = source.startsWith('http') || source.startsWith('git@') || source.startsWith('ssh://');
-            const typeText = isGitUrl ? 'Git' : '本地';
-            const sourceText = isGitUrl ? `Git URL: ${source}` : `源路径: ${source}`;
+            const typeText = isGitUrl ? 'Git' : t('common.local');
+            const sourceText = isGitUrl ? `Git URL: ${source}` : `${t('common.source')} ${t('common.path')}: ${source}`;
             
             return {
               content: [{
                 type: "text",
-                text: `✅ 成功添加${typeText}模板 "${name}"\n📍 ${sourceText}\n📝 描述: ${description || '无描述'}`
+                text: t('mcp.messages.template_added', { type: typeText, name })
               }]
             };
           } else {
             return {
               content: [{
                 type: "text",
-                text: `❌ 添加模板失败: ${result.error}`
+                text: t('mcp.messages.template_add_failed', { error: result.error || '' })
               }]
             };
           }
@@ -70,7 +71,7 @@ export class ScaffoldMCPServer {
           return {
             content: [{
               type: "text",
-              text: `❌ 添加模板时发生错误: ${error instanceof Error ? error.message : String(error)}`
+              text: t('mcp.messages.template_add_failed', { error: error instanceof Error ? error.message : String(error) })
             }]
           };
         }
@@ -79,9 +80,9 @@ export class ScaffoldMCPServer {
 
     // 删除模板工具  
     this.server.tool(
-      "remove_scaffold_template",
+      "remove_project_template",
       {
-        name: z.string().describe("要删除的模板名称")
+        name: z.string().describe(t('mcp.tools.remove_project_template.name_desc'))
       },
       async ({ name }) => {
         try {
@@ -90,15 +91,15 @@ export class ScaffoldMCPServer {
             content: [{
               type: "text",
               text: result.success 
-                ? `✅ 成功删除模板 "${name}"`
-                : `❌ 删除模板失败: ${result.error}`
+                ? t('mcp.messages.template_removed', { name })
+                : t('mcp.messages.template_remove_failed', { error: result.error || '' })
             }]
           };
         } catch (error) {
           return {
             content: [{
               type: "text",
-              text: `❌ 删除模板时发生错误: ${error instanceof Error ? error.message : String(error)}`
+              text: t('mcp.messages.template_remove_failed', { error: error instanceof Error ? error.message : String(error) })
             }]
           };
         }
@@ -107,9 +108,9 @@ export class ScaffoldMCPServer {
 
     // 更新模板工具
     this.server.tool(
-      "update_scaffold_template",
+      "update_project_template",
       {
-        name: z.string().describe("要更新的模板名称")
+        name: z.string().describe(t('mcp.tools.update_project_template.name_desc'))
       },
       async ({ name }) => {
         try {
@@ -118,15 +119,15 @@ export class ScaffoldMCPServer {
             content: [{
               type: "text",
               text: result.success 
-                ? `✅ 成功更新模板 "${name}" 到最新版本`
-                : `❌ 更新模板失败: ${result.error}`
+                ? t('mcp.messages.template_updated', { name })
+                : t('mcp.messages.template_update_failed', { error: result.error || '' })
             }]
           };
         } catch (error) {
           return {
             content: [{
               type: "text",
-              text: `❌ 更新模板时发生错误: ${error instanceof Error ? error.message : String(error)}`
+              text: t('mcp.messages.template_update_failed', { error: error instanceof Error ? error.message : String(error) })
             }]
           };
         }
@@ -135,7 +136,7 @@ export class ScaffoldMCPServer {
 
     // 批量更新所有模板工具
     this.server.tool(
-      "update_all_scaffold_templates",
+      "update_all_templates",
       {},
       async () => {
         try {
@@ -144,15 +145,15 @@ export class ScaffoldMCPServer {
             content: [{
               type: "text",
               text: result.success 
-                ? `✅ ${result.message}`
-                : `❌ 批量更新失败: ${result.error}`
+                ? t('mcp.messages.all_templates_updated') + ': ' + (result.message || '')
+                : t('mcp.messages.templates_update_failed', { error: result.error || '' })
             }]
           };
         } catch (error) {
           return {
             content: [{
               type: "text",
-              text: `❌ 批量更新时发生错误: ${error instanceof Error ? error.message : String(error)}`
+              text: t('mcp.messages.templates_update_failed', { error: error instanceof Error ? error.message : String(error) })
             }]
           };
         }
@@ -161,7 +162,7 @@ export class ScaffoldMCPServer {
 
     // 列出模板工具
     this.server.tool(
-      "list_scaffold_templates",
+      "list_project_templates",
       {},
       async () => {
         try {
@@ -171,28 +172,28 @@ export class ScaffoldMCPServer {
             return {
               content: [{
                 type: "text",
-                text: "📭 暂无可用模板\n\n使用 add_scaffold_template 工具添加新模板。"
+                text: t('mcp.messages.no_templates') + "\n\n" + t('mcp.tools.add_project_template.description')
               }]
             };
           }
 
-          let output = "📋 可用模板列表:\n\n";
+          let output = t('mcp.messages.available_templates') + ":\n\n";
           result.templates.forEach((template, index) => {
             const typeIcon = template.type === 'local' ? '📁' : '🌐';
-            const typeText = template.type === 'local' ? '本地' : 'Git';
+            const typeText = template.type === 'local' ? t('common.local') : 'Git';
             
             output += `${index + 1}. **${template.name}** ${typeIcon}[${typeText}]\n`;
-            output += `   📝 描述: ${template.description}\n`;
+            output += `   📝 ${t('common.description')}: ${template.description}\n`;
             
             if (template.type === 'git') {
-              output += `   🔗 Git URL: ${template.gitUrl}\n`;
+              output += `   🔗 Git ${t('common.url')}: ${template.gitUrl}\n`;
             } else {
-              output += `   📁 源路径: ${template.sourcePath}\n`;
+              output += `   📁 ${t('common.source')} ${t('common.path')}: ${template.sourcePath}\n`;
             }
             
-            output += `   📅 添加时间: ${new Date(template.addedAt).toLocaleString()}\n`;
+            output += `   📅 ${t('common.date')}: ${new Date(template.addedAt).toLocaleString()}\n`;
             if (template.tags) {
-              output += `   🏷️ 标签: ${template.tags.join(', ')}\n`;
+              output += `   🏷️ ${t('common.tags')}: ${template.tags.join(', ')}\n`;
             }
             output += '\n';
           });
@@ -207,7 +208,7 @@ export class ScaffoldMCPServer {
           return {
             content: [{
               type: "text",
-              text: `❌ 获取模板列表时发生错误: ${error instanceof Error ? error.message : String(error)}`
+              text: t('mcp.messages.templates_update_failed', { error: error instanceof Error ? error.message : String(error) })
             }]
           };
         }
@@ -216,12 +217,12 @@ export class ScaffoldMCPServer {
 
     // 创建项目工具
     this.server.tool(
-      "create_project_from_scaffold",
+      "initialize_project",
       {
-        templateName: z.string().describe("使用的模板名称"),
-        projectName: z.string().describe("新项目的名称"),
-        targetDir: z.string().optional().describe("目标目录路径（可选，默认为当前目录）"),
-        variables: z.record(z.string()).optional().describe("自定义模板变量（可选）")
+        templateName: z.string().describe(t('mcp.tools.initialize_project.template_name_desc')),
+        projectName: z.string().describe(t('mcp.tools.initialize_project.project_name_desc')),
+        targetDir: z.string().optional().describe(t('mcp.tools.initialize_project.target_dir_desc')),
+        variables: z.record(z.string()).optional().describe(t('mcp.tools.initialize_project.variables_desc'))
       },
       async ({ templateName, projectName, targetDir, variables }) => {
         try {
@@ -233,10 +234,10 @@ export class ScaffoldMCPServer {
           });
           
           if (result.success) {
-            let output = `🚀 项目 "${projectName}" 创建成功!\n`;
-            output += `📁 项目路径: ${result.projectPath}\n`;
-            output += `📦 使用模板: ${templateName}\n\n`;
-            output += `📝 下一步操作:\n`;
+            let output = `🚀 ${t('mcp.messages.project_created', { name: projectName })}\n`;
+            output += `📁 ${t('common.project')} ${t('common.path')}: ${result.projectPath}\n`;
+            output += `📦 ${t('common.template')}: ${templateName}\n\n`;
+            output += `📝 ${t('common.next')} ${t('common.steps')}:\n`;
             output += `  cd ${projectName}\n`;
             output += `  npm install\n`;
             output += `  npm run dev\n`;
@@ -251,7 +252,7 @@ export class ScaffoldMCPServer {
             return {
               content: [{
                 type: "text",
-                text: `❌ 创建项目失败: ${result.error}`
+                text: t('mcp.messages.project_create_failed', { error: result.error || '' })
               }]
             };
           }
@@ -259,7 +260,7 @@ export class ScaffoldMCPServer {
           return {
             content: [{
               type: "text",
-              text: `❌ 创建项目时发生错误: ${error instanceof Error ? error.message : String(error)}`
+              text: t('mcp.messages.project_create_failed', { error: error instanceof Error ? error.message : String(error) })
             }]
           };
         }
@@ -268,9 +269,9 @@ export class ScaffoldMCPServer {
 
     // 获取模板详情工具
     this.server.tool(
-      "get_scaffold_template_info",
+      "get_template_info",
       {
-        name: z.string().describe("模板名称")
+        name: z.string().describe(t('mcp.tools.get_template_info.name_desc'))
       },
       async ({ name }) => {
         try {
@@ -280,40 +281,40 @@ export class ScaffoldMCPServer {
             return {
               content: [{
                 type: "text",
-                text: `❌ 模板 "${name}" 不存在\n\n使用 list_scaffold_templates 查看可用模板。`
+                text: t('mcp.messages.template_not_found', { name }) + "\n\n" + t('mcp.tools.list_project_templates.description')
               }]
             };
           }
           
           const template = result.data as TemplateInfo;
-          let output = `📋 模板详情: **${name}**\n\n`;
-          output += `📝 描述: ${template.description || '无描述'}\n`;
-          output += `📅 添加时间: ${new Date(template.addedAt).toLocaleString()}\n`;
+          let output = `📋 ${t('mcp.messages.template_info', { name })}\n\n`;
+          output += `📝 ${t('common.description')}: ${template.description || t('common.optional')}\n`;
+          output += `📅 ${t('common.date')}: ${new Date(template.addedAt).toLocaleString()}\n`;
           
           if (template.type === 'git') {
-            output += `🔗 Git URL: ${template.gitUrl}\n`;
+            output += `🔗 Git ${t('common.url')}: ${template.gitUrl}\n`;
           } else {
-            output += `📁 源路径: ${template.sourcePath}\n`;
-            output += `🏷️  类型: 本地模板\n`;
+            output += `📁 ${t('common.source')} ${t('common.path')}: ${template.sourcePath}\n`;
+            output += `🏷️  ${t('common.type')}: ${t('common.local')} ${t('common.template')}\n`;
           }
           
           if (template.updatedAt) {
-            output += `🔄 最后更新: ${new Date(template.updatedAt).toLocaleString()}\n`;
+            output += `🔄 ${t('common.last')} ${t('common.update')}: ${new Date(template.updatedAt).toLocaleString()}\n`;
           }
           
           if (template.config?.tags) {
-            output += `🏷️ 标签: ${template.config.tags.join(', ')}\n`;
+            output += `🏷️ ${t('common.tags')}: ${template.config.tags.join(', ')}\n`;
           }
           
           if (template.config?.postCreateInstructions) {
-            output += `\n📝 创建后说明:\n`;
+            output += `\n📝 ${t('common.create')} ${t('common.after')} ${t('common.instructions')}:\n`;
             template.config.postCreateInstructions.forEach(instruction => {
               output += `  • ${instruction}\n`;
             });
           }
 
           if (template.config?.requirements) {
-            output += `\n⚙️ 环境要求:\n`;
+            output += `\n⚙️ ${t('common.environment')} ${t('common.requirements')}:\n`;
             Object.entries(template.config.requirements).forEach(([key, value]) => {
               if (value) {
                 output += `  • ${key}: ${value}\n`;
@@ -331,7 +332,7 @@ export class ScaffoldMCPServer {
           return {
             content: [{
               type: "text",
-              text: `❌ 获取模板信息时发生错误: ${error instanceof Error ? error.message : String(error)}`
+              text: t('mcp.messages.template_info') + t('common.error') + `: ${error instanceof Error ? error.message : String(error)}`
             }]
           };
         }
@@ -340,9 +341,9 @@ export class ScaffoldMCPServer {
 
     // 验证模板工具
     this.server.tool(
-      "validate_scaffold_template",
+      "validate_template",
       {
-        name: z.string().describe("要验证的模板名称")
+        name: z.string().describe(t('mcp.tools.validate_template.name_desc'))
       },
       async ({ name }) => {
         try {
@@ -351,15 +352,15 @@ export class ScaffoldMCPServer {
             content: [{
               type: "text",
               text: result.success 
-                ? `✅ 模板 "${name}" 验证通过，可以正常使用`
-                : `❌ 模板验证失败: ${result.error}`
+                ? t('mcp.messages.template_valid', { name })
+                : t('mcp.messages.template_invalid', { error: result.error || '' })
             }]
           };
         } catch (error) {
           return {
             content: [{
               type: "text",
-              text: `❌ 验证模板时发生错误: ${error instanceof Error ? error.message : String(error)}`
+              text: t('mcp.messages.template_invalid', { error: error instanceof Error ? error.message : String(error) })
             }]
           };
         }
@@ -377,15 +378,15 @@ export class ScaffoldMCPServer {
             content: [{
               type: "text",
               text: result.success 
-                ? `✅ ${result.message}`
-                : `❌ 清理失败: ${result.error}`
+                ? t('mcp.messages.cleanup_complete', { message: result.message || '' })
+                : t('mcp.messages.cleanup_failed', { error: result.error || '' })
             }]
           };
         } catch (error) {
           return {
             content: [{
               type: "text",
-              text: `❌ 清理时发生错误: ${error instanceof Error ? error.message : String(error)}`
+              text: t('mcp.messages.cleanup_failed', { error: error instanceof Error ? error.message : String(error) })
             }]
           };
         }
@@ -486,128 +487,141 @@ export class ScaffoldMCPServer {
    */
   private setupPrompts(): void {
     // 使用帮助提示
-    this.server.prompt("scaffold-usage-help", {
-      action: z.enum(["setup", "create", "manage", "general"]).optional().describe("需要帮助的操作类型")
-    }, ({ action }) => {
-      let promptText = "";
-      
-      switch (action) {
-        case "setup":
-          promptText = `我想设置脚手架工具，需要添加一些项目模板。请帮我：
-1. 添加一个 React + Ant Design 的模板
-2. 添加一个 Next.js + Tailwind CSS 的模板
-3. 列出当前所有可用的模板
+    this.server.prompt("scaffold-usage-help", 
+      t('mcp.prompts.usage_help'),
+      {
+        action: z.enum(["setup", "create", "manage", "general"]).optional().describe(t('common.action'))
+      },
+      ({ action }) => {
+        let promptText = "";
+        
+        switch (action) {
+          case "setup":
+            promptText = `I want to setup scaffold tool, need to add some project templates. Please help me:
+1. Add a React + Ant Design template
+2. Add a Next.js + Tailwind CSS template
+3. List all available templates
 
-这些模板的 Git 仓库地址我会提供给你。`;
-          break;
-          
-        case "create":
-          promptText = `我想使用脚手架创建一个新项目。请帮我：
-1. 先查看有哪些可用的模板
-2. 根据我的需求推荐合适的模板
-3. 创建项目并提供后续步骤指导
+These templates' Git repository URLs I will provide.`;
+            break;
+            
+          case "create":
+            promptText = `I want to use scaffold to create a new project. Please help me:
+1. First view available templates
+2. Based on my requirements recommend suitable templates
+3. Create project and provide next steps guidance
 
-我的项目需求是：[请描述你的项目类型和技术栈要求]`;
-          break;
-          
-        case "manage":
-          promptText = `我需要管理现有的脚手架模板。请帮我：
-1. 查看当前所有模板的状态
-2. 更新过时的模板
-3. 删除不再需要的模板
-4. 添加新的模板
+My project requirements are: [Please describe your project type and tech stack requirements]`;
+            break;
+            
+          case "manage":
+            promptText = `I need to manage existing scaffold templates. Please help me:
+1. View all current templates status
+2. Update outdated templates
+3. Remove no longer needed templates
+4. Add new templates
 
-请先显示当前的模板列表。`;
-          break;
-          
-        default:
-          promptText = `我想使用灵活的脚手架工具。这个工具可以：
+Please first show current templates list.`;
+            break;
+            
+          default:
+            promptText = `I want to use project scaffold tool to quickly initialize projects or manage project templates. This tool specializes in:
 
-📦 **模板管理**：
-- 添加 Git 仓库作为项目模板
-- 删除不需要的模板
-- 更新模板到最新版本
-- 查看所有可用模板
+🚀 **Project initialization** (when you need to create new projects):
+- Quickly create React, Vue, Next.js, Node.js etc. projects
+- One-click generate complete project structure and config
+- Automatic install dependencies and initialize Git
 
-🚀 **项目创建**：
-- 基于模板快速创建新项目
-- 自动替换模板变量
-- 执行后处理脚本
-- 提供创建后指导
+📦 **Template management** (when you need to manage project templates):
+- Add GitHub/GitLab projects as templates
+- Update templates to latest version
+- View and validate available templates
+- Cleanup invalid templates
 
-🔧 **高级功能**：
-- 验证模板有效性
-- 清理无效模板
-- 批量更新模板
-- 查看使用统计
+💡 **Usage scenarios**:
+- "Help me create a React project"
+- "Add a GitHub Next.js template"
+- "View which available project templates"
+- "Update all outdated templates"
 
-请告诉我你想要做什么，我来帮你完成。`;
+Please tell me your specific requirements, like "create a React project" or "add a template".`;
+        }
+
+        return {
+          messages: [{
+            role: "user",
+            content: {
+              type: "text",
+              text: promptText
+            }
+          }]
+        };
       }
-
-      return {
-        messages: [{
-          role: "user",
-          content: {
-            type: "text",
-            text: promptText
-          }
-        }]
-      };
-    });
+    );
 
     // 项目创建指导提示
-    this.server.prompt("project-creation-guide", {
-      projectType: z.string().describe("项目类型或技术栈"),
-      features: z.string().optional().describe("需要的特性或功能")
-    }, ({ projectType, features }) => {
-      const promptText = `我想创建一个 ${projectType} 项目${features ? `，需要包含以下特性：${features}` : ''}。
+    this.server.prompt("create-new-project", 
+      "Create new project guidance prompt, recommend appropriate templates based on requirements",
+      {
+        projectType: z.string().describe("Project type or tech stack, such as React, Vue, Next.js, Node.js API"),
+        features: z.string().optional().describe("Required features or functionality, such as TypeScript, Tailwind, database integration")
+      },
+      ({ projectType, features }) => {
+        const promptText = `I want to create a ${projectType} project${features ? `, need to include the following features: ${features}` : ''}.
 
-请帮我：
-1. 查看是否有合适的脚手架模板
-2. 如果有多个选择，请推荐最适合的
-3. 指导我创建项目
-4. 提供项目创建后的配置建议
+Please help me:
+1. Use list_project_templates to view available project templates
+2. Based on my requirements recommend most suitable templates
+3. Use initialize_project to create project
+4. Provide project after creation configuration suggestions
 
-如果没有合适的现有模板，请建议我如何添加新的模板。`;
+Example:
+- If see suitable templates: "use template 'react-vite' create project"
+- If no suitable templates: "I can help you add a new template"`;
 
-      return {
-        messages: [{
-          role: "user",
-          content: {
-            type: "text",
-            text: promptText
-          }
-        }]
-      };
-    });
+        return {
+          messages: [{
+            role: "user",
+            content: {
+              type: "text",
+              text: promptText
+            }
+          }]
+        };
+      }
+    );
 
     // 模板开发指导提示
-    this.server.prompt("template-development-guide", {
-      templateName: z.string().describe("模板名称"),
-      baseFramework: z.string().describe("基础框架或技术栈"),
-      features: z.string().optional().describe("要包含的特性")
-    }, ({ templateName, baseFramework, features }) => {
-      const promptText = `我想创建一个新的脚手架模板 "${templateName}"，基于 ${baseFramework}${features ? `，包含以下特性：${features}` : ''}。
+    this.server.prompt("add-custom-template", 
+      "Create custom project template guidance prompt",
+      {
+        templateName: z.string().describe("Template name, such as 'my-react-template'"),
+        baseFramework: z.string().describe("Base framework or tech stack, such as React, Vue, Express"),
+        features: z.string().optional().describe("Features to include, such as TypeScript, Tailwind, authentication system")
+      },
+      ({ templateName, baseFramework, features }) => {
+        const promptText = `I want to create a new project template "${templateName}", based on ${baseFramework}${features ? `, including the following features: ${features}` : ''}.
 
-请指导我：
-1. 如何结构化模板目录
-2. 如何编写 scaffold.config.js 配置文件
-3. 如何使用模板变量（如 {{PROJECT_NAME}}）
-4. 如何设置后处理脚本
-5. 最佳实践和注意事项
+Please guide me:
+1. How to structure template directory
+2. How to write scaffold.config.js config file
+3. How to use template variables (like {{PROJECT_NAME}})
+4. How to set post-processing scripts
+5. Best practices and notes
 
-完成后我需要将模板推送到 Git 仓库并添加到脚手架工具中。`;
+After completion please use add_project_template to add template to scaffold tool.`;
 
-      return {
-        messages: [{
-          role: "user",
-          content: {
-            type: "text",
-            text: promptText
-          }
-        }]
-      };
-    });
+        return {
+          messages: [{
+            role: "user",
+            content: {
+              type: "text",
+              text: promptText
+            }
+          }]
+        };
+      }
+    );
   }
 
   /**
@@ -617,12 +631,12 @@ export class ScaffoldMCPServer {
     try {
       const transport = new StdioServerTransport();
       
-      logger.info('🚀 Flexible Scaffold MCP Server starting...');
+      logger.info(t('mcp.server.starting'));
       await this.server.connect(transport);
-      logger.success('✅ MCP Server connected successfully');
+      logger.success(t('mcp.server.connected'));
       
     } catch (error) {
-      logger.error(`❌ Failed to start MCP server: ${error}`);
+      logger.error(t('mcp.server.failed') + `: ${error}`);
       throw error;
     }
   }
